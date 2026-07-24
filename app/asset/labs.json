@@ -1,0 +1,8 @@
+[
+  {
+    "name": "AI & ML Lab",
+    "department": "Computer Science",
+    "description": "GPU-equipped lab for AI/ML training and research.",
+    "equipment": ["RTX 4070 workstation", "Networked storage"]
+  }
+]

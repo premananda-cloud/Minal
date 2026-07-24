@@ -7,5 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.139.2",
     "opencv-contrib-python>=5.0.0.93",
+    "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
     "uvicorn>=0.51.0",
 ]

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Dr. Example Singh",
+    "designation": "Scientist-C / HoD",
+    "department": "Computer Science",
+    "email": "example.singh@nielit.gov.in",
+    "room": "CS-101",
+    "specialization": ["Machine Learning", "Networking"]
+  }
+]
