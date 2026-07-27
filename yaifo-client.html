@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minal — NIELIT Imphal Assistant</title>
+<style>
+  :root {
+    --bg: #0f1420;
+    --panel: #171d2c;
+    --border: #2a3245;
+    --text: #e8ebf2;
+    --muted: #8891a5;
+    --accent: #4f8cff;
+    --accent-dim: #2d4a8a;
+    --error: #ff6b6b;
+    --bubble-user: #2d3a55;
+    --bubble-assistant: #1c2333;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    width: 100%;
+    max-width: 640px;
+    height: 85vh;
+    max-height: 800px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  h1 {
+    margin: 0 0 2px;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .new-chat-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .new-chat-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  details.settings {
+    margin-bottom: 14px;
+  }
+  details.settings summary {
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .api-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .api-row input {
+    flex: 1;
+    background: #0d1220;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family: monospace;
+  }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 2px 12px;
+  }
+  .messages::-webkit-scrollbar { width: 6px; }
+  .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .msg {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .msg.user {
+    align-self: flex-end;
+    background: var(--bubble-user);
+    border-bottom-right-radius: 4px;
+  }
+  .msg.assistant {
+    align-self: flex-start;
+    background: var(--bubble-assistant);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+  .msg.error {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid var(--error);
+    color: var(--error);
+    border-bottom-left-radius: 4px;
+  }
+  .msg.thinking {
+    align-self: flex-start;
+    background: var(--bubble-assistant);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .empty-state {
+    margin: auto;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 20px;
+  }
+
+  form {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  textarea {
+    flex: 1;
+    resize: none;
+    background: #0d1220;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    min-height: 46px;
+    max-height: 140px;
+    line-height: 1.4;
+  }
+  textarea:focus, .api-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  button.send {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0 22px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button.send:hover:not(:disabled) { background: #6a9fff; }
+  button.send:disabled {
+    background: var(--accent-dim);
+    cursor: not-allowed;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    margin-right: 4px;
+    animation: pulse 1s infinite ease-in-out;
+  }
+  .dot:nth-child(2) { animation-delay: 0.15s; }
+  .dot:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <div>
+      <h1>Minal</h1>
+      <p class="subtitle">NIELIT Imphal campus assistant</p>
+    </div>
+    <button class="new-chat-btn" id="newChatBtn" type="button">New chat</button>
+  </div>
+
+  <details class="settings">
+    <summary>API settings</summary>
+    <div class="api-row">
+      <input id="apiUrl" type="text" value="http://127.0.0.1:8000" spellcheck="false">
+    </div>
+  </details>
+
+  <div class="messages" id="messages">
+    <div class="empty-state" id="emptyState">Ask about faculty, courses, labs, or notices to get started.</div>
+  </div>
+
+  <form id="askForm">
+    <textarea id="query" placeholder="Ask a question…" required rows="1"></textarea>
+    <button class="send" type="submit" id="submitBtn">Ask</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('askForm');
+  const queryEl = document.getElementById('query');
+  const apiUrlEl = document.getElementById('apiUrl');
+  const submitBtn = document.getElementById('submitBtn');
+  const messagesEl = document.getElementById('messages');
+  const newChatBtn = document.getElementById('newChatBtn');
+
+  let sessionId = null; // set by the server on first reply, then reused for the conversation
+
+  function baseUrl() {
+    return apiUrlEl.value.trim().replace(/\/+$/, '');
+  }
+
+  function addMessage(role, text) {
+    const empty = document.getElementById('emptyState');
+    if (empty) empty.remove();
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  function addThinkingBubble() {
+    const empty = document.getElementById('emptyState');
+    if (empty) empty.remove();
+    const div = document.createElement('div');
+    div.className = 'msg thinking';
+    div.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  function resetConversation() {
+    const oldSessionId = sessionId;
+    sessionId = null;
+    messagesEl.innerHTML = '';
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.id = 'emptyState';
+    empty.textContent = 'Ask about faculty, courses, labs, or notices to get started.';
+    messagesEl.appendChild(empty);
+
+    // best-effort server-side cleanup; ignore failures (e.g. server already gone)
+    if (oldSessionId) {
+      fetch(`${baseUrl()}/session/${oldSessionId}/reset`, { method: 'POST' }).catch(() => {});
+    }
+  }
+
+  newChatBtn.addEventListener('click', resetConversation);
+
+  // auto-grow textarea, Enter submits, Shift+Enter newline
+  queryEl.addEventListener('input', () => {
+    queryEl.style.height = 'auto';
+    queryEl.style.height = Math.min(queryEl.scrollHeight, 140) + 'px';
+  });
+  queryEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const query = queryEl.value.trim();
+    if (!query) return;
+
+    addMessage('user', query);
+    queryEl.value = '';
+    queryEl.style.height = 'auto';
+
+    submitBtn.disabled = true;
+    const thinkingBubble = addThinkingBubble();
+
+    try {
+      const res = await fetch(`${baseUrl()}/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, session_id: sessionId })
+      });
+
+      if (!res.ok) {
+        let detail = res.statusText;
+        try {
+          const errBody = await res.json();
+          detail = errBody.detail || detail;
+        } catch (_) {}
+        throw new Error(`${res.status}: ${detail}`);
+      }
+
+      const data = await res.json();
+      sessionId = data.session_id || sessionId;
+
+      thinkingBubble.remove();
+      addMessage('assistant', data.answer || '(empty response)');
+    } catch (err) {
+      thinkingBubble.remove();
+      addMessage('error', `Couldn't reach the assistant: ${err.message}`);
+    } finally {
+      submitBtn.disabled = false;
+      queryEl.focus();
+    }
+  });
+</script>
+
+</body>
+</html>
