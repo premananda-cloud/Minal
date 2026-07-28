@@ -1,20 +1,23 @@
 """
-Builds what gets sent to Ollama:
-  1. runs all registered skills (datetime, later maybe web search)
-  2. searches db/ for records relevant to the user's CURRENT query
-  3. loads the system prompt template
-  4. stitches it into either a single prompt string (build_context)
-     or a role-tagged message list for /api/chat (build_messages)
+Builds what gets sent to Ollama.
 
-main.py should only ever call these — it shouldn't know about
-db/, asset/, or session_store directly.
+Two different strategies are used for the two kinds of data:
 
-Note on multi-turn: the system message is rebuilt fresh on every
-call using only the LATEST query, so the data grounding (live facts +
-matched faculty/course/notice rows) always reflects what's relevant
-right now. Prior turns are threaded in as plain user/assistant
-messages so the model keeps conversational context ("his email?"
-resolving to whoever "he" was) without stale data grounding.
+  - Live facts (current date/time) and active notices are small,
+    general-purpose, and useful on almost every turn — so they're
+    still PUSHED straight into the system message.
+
+  - Faculty / courses / labs are NOT pushed anymore. Previously this
+    file guessed what was relevant with a keyword search against the
+    raw query text, which silently failed whenever the visitor's
+    wording didn't overlap with a name/department/title — it looked
+    like the model "couldn't access" the data. Instead, those are now
+    exposed as TOOLS (see tools.py) that the model calls itself, with
+    whatever search term it thinks is right, and can retry or chain
+    across multiple calls in one turn.
+
+main.py should only ever call build_messages() — it shouldn't know
+about db/, asset/, or tools.py directly.
 """
 
 from pathlib import Path
@@ -32,46 +35,12 @@ def _load_system_prompt() -> str:
     return "You are a helpful assistant."
 
 
-def _search_data(query: str) -> str:
-    """Naive keyword search across faculty/courses/notices/labs.
-    Good enough for ~100 entries; upgrade to embeddings later if needed."""
-    sections = []
-
-    faculty = db.get_faculty(query)
-    if faculty:
-        lines = [f"- {f.name}, {f.designation}, {f.department}" for f in faculty]
-        sections.append("Faculty:\n" + "\n".join(lines))
-
-    courses = db.get_courses(query)
-    if courses:
-        lines = [f"- {c.code}: {c.title} ({c.department})" for c in courses]
-        sections.append("Courses:\n" + "\n".join(lines))
-
-    labs = db.get_labs(query)
-    if labs:
-        lines = [f"- {l.name} ({l.department})" for l in labs]
-        sections.append("Labs:\n" + "\n".join(lines))
-
-    # Notices aren't keyword-filtered — just show active ones, model decides relevance
+def _active_notices_summary() -> str:
     notices = db.get_notices(active_only=True)
-    if notices:
-        lines = [f"- [{n.date}] {n.title}: {n.body}" for n in notices]
-        sections.append("Active notices:\n" + "\n".join(lines))
-
-    return "\n\n".join(sections) if sections else "No matching records found."
-
-
-def build_context(query: str) -> str:
-    system_prompt = _load_system_prompt()
-    skill_facts = run_all_skills()
-    matched_data = _search_data(query)
-
-    return (
-        f"{system_prompt}\n\n"
-        f"--- Live facts ---\n{skill_facts}\n\n"
-        f"--- Relevant data ---\n{matched_data}\n\n"
-        f"--- Visitor question ---\n{query}"
-    )
+    if not notices:
+        return "No active notices right now."
+    lines = [f"- [{n.date}] {n.title}: {n.body}" for n in notices]
+    return "\n".join(lines)
 
 
 def build_messages(
@@ -79,21 +48,28 @@ def build_messages(
 ) -> List[Dict[str, str]]:
     """
     Returns a messages list for Ollama's /api/chat:
-      [ {role: system, content: prompt+facts+data},
+      [ {role: system, content: identity+rules+live facts+active notices},
         ...prior turns from history (user/assistant, oldest first)...,
         {role: user, content: query} ]
+
+    Faculty/course/lab data is deliberately NOT included here — the
+    model pulls that itself via tools (see tools.py + main.py, which
+    passes TOOL_SCHEMAS/TOOL_DISPATCH into the Ollama call).
 
     `history` is a list of (role, content) tuples from session_store,
     e.g. [("user", "who teaches ML?"), ("assistant", "Dr. X does.")].
     """
     system_prompt = _load_system_prompt()
     skill_facts = run_all_skills()
-    matched_data = _search_data(query)
+    notices = _active_notices_summary()
 
     system_content = (
         f"{system_prompt}\n\n"
         f"--- Live facts ---\n{skill_facts}\n\n"
-        f"--- Relevant data ---\n{matched_data}"
+        f"--- Active notices ---\n{notices}\n\n"
+        f"You have tools available to look up faculty, courses, and labs. "
+        f"Call them whenever a visitor asks about something specific — "
+        f"never guess or invent a name, code, or detail."
     )
 
     messages: List[Dict[str, str]] = [{"role": "system", "content": system_content}]

@@ -1,10 +1,290 @@
 [
   {
-    "code": "CCC",
-    "title": "Course on Computer Concepts",
-    "department": "General",
-    "duration": "80 hours",
-    "eligibility": "8th pass",
-    "description": "Basic computer literacy course for beginners."
+    "code": "IN21",
+    "title": "Online Internship Program in AWS - Batch 5",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "IN14",
+    "title": "Online Internship in HLS Programming (C/C++ based HDL Design) - Batch 5",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "IN13",
+    "title": "Online Internship in RTL Design using Verilog HDL - Batch 5",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "IN12",
+    "title": "Online Internship in IoT Data Analysis - Batch 5",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "IN11",
+    "title": "Online Internship in Embedded C - Batch 5",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "FED",
+    "title": "Certificate Course in Front End Development",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "IT15",
+    "title": "Certificate Course in Structured Query Language using MySQL (Self Paced)",
+    "department": "Computer Science",
+    "duration": "Self Paced",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "ST114",
+    "title": "Certificate Course on Embedded 'C' Batch 2 (FREE)",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "ST115",
+    "title": "Certificate Course on Robotic Process Automation using UiPath Batch 2 (FREE)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "ST112",
+    "title": "Online Certificate Course in Verilog Programming Batch 2 (FREE)",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "ST113",
+    "title": "Certificate Course on IoT Data Analyst Batch 2 (FREE)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "ST111",
+    "title": "Online Certificate Course/Internship in Data Science and Machine Learning using Python Batch 2 (FREE)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "BLINUX",
+    "title": "Certificate Course in Basic Linux (Free) Batch-2",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "BIGDATA",
+    "title": "Certificate Course in Big Data Fundamentals (Free)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "CYBER-SEC",
+    "title": "Certificate Course in Cyber Security (Free) - Jan-2023",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "WIN-SRV",
+    "title": "Certificate Course in Windows Server Administration (Free) - Jan-2023",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "LIN-SRV",
+    "title": "Certificate Course in Linux Server Administration (Free) - Jan-2023",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "VIRT",
+    "title": "Certificate Course in Virtualization (Free) - Jan-2023",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "AWS-INTRO",
+    "title": "Certificate Course in Introduction to AWS (Free) - Jan-2023",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Free course. Please update description."
+  },
+  {
+    "code": "DIP-CSE",
+    "title": "Diploma in Computer Science Engineering",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "BTECH-CSE-AIML",
+    "title": "B. Tech. in Computer Science Engineering with AI & ML",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "BTECH-CSE",
+    "title": "B. Tech in Computer Science Engineering",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "BCA",
+    "title": "Bachelor in Computer Applications (BCA)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MCA",
+    "title": "Master of Computer Applications (MCA)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MSC-CS-DS",
+    "title": "M.Sc. in Computer Science (with specialization in Data Science)",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-CF",
+    "title": "M. Tech in Cyber Forensics",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-CFIS",
+    "title": "M. Tech. in Cyber Forensics and Information Security",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-EDT",
+    "title": "M. Tech in Electronics Design and Technology",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-ES",
+    "title": "M. Tech. in Embedded Systems",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-AIML",
+    "title": "M. Tech. in Artificial Intelligence and Machine Learning",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-AE",
+    "title": "M.Tech. in Automotive Electronics",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-DE",
+    "title": "M.Tech. in Data Engineering",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "MTECH-IOT",
+    "title": "M. Tech. in IoT and Sensor Systems",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "PHD-ECE",
+    "title": "Ph. D. in Electronics Engineering",
+    "department": "Electronics",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "PHD-CSA",
+    "title": "Ph. D. in Computer Science and Application",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
+  },
+  {
+    "code": "PHD-CSE",
+    "title": "Ph. D. in Computer Science Engineering",
+    "department": "Computer Science",
+    "duration": "TBD",
+    "eligibility": "TBD",
+    "description": "Please update description."
   }
 ]

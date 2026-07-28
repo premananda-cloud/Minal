@@ -44,12 +44,20 @@ def _ensure_loaded() -> None:
         refresh()
 
 
-def get_faculty(name: Optional[str] = None) -> List[Faculty]:
+def get_faculty(query: Optional[str] = None) -> List[Faculty]:
     _ensure_loaded()
     data = _cache["faculty"]
-    if name:
-        name_lower = name.lower()
-        return [f for f in data if name_lower in f.name.lower()]
+    if query:
+        q = query.lower()
+
+        def matches(f: Faculty) -> bool:
+            if q in f.name.lower() or q in f.department.lower() or q in f.designation.lower():
+                return True
+            if f.specialization and any(q in s.lower() for s in f.specialization):
+                return True
+            return False
+
+        return [f for f in data if matches(f)]
     return data
 
 

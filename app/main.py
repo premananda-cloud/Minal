@@ -21,7 +21,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import AskRequest, AskResponse
 from app.skill.context_builder import build_messages
-from app.skill.ollama_client import call_ollama_chat, DEFAULT_MODEL
+from app.skill.ollama_client import call_ollama_chat_with_tools, DEFAULT_MODEL
+from app.skill.tools import TOOL_SCHEMAS, TOOL_DISPATCH
 from app.skill import session_store
 from app.db import repository as db
 
@@ -53,7 +54,7 @@ def ask(request: AskRequest) -> AskResponse:
 
     messages = build_messages(request.query, history)
     try:
-        answer = call_ollama_chat(messages)
+        answer = call_ollama_chat_with_tools(messages, TOOL_SCHEMAS, TOOL_DISPATCH)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Ollama call failed: {e}")
 
