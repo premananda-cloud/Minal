@@ -6,8 +6,12 @@
 rt/
   requirements.txt
   README.md
+  .env                        # local config — gitignored
+  .env.example                # tracked template for .env
+  .gitignore
   docs/
   app/
+    config.py                  # loads .env via pydantic-settings — the only place env vars are read
     main.py                    # thin HTTP layer — no business logic
     schemas/
       ask.py                   # AskRequest, AskResponse (Pydantic, API boundary)
@@ -31,8 +35,9 @@ rt/
 
 ## 2. Why these boundaries
 
-| Folder | Responsibility | Rule |
+| File/Folder | Responsibility | Rule |
 |---|---|---|
+| `config.py` | Environment config | The *only* place `os.environ` / `.env` is read. Model name, Ollama host, API key, app port all come from here. If you're about to hardcode a port or model string anywhere else, it belongs in `.env` instead. |
 | `asset/` | Dumb storage | No logic. JSON in, JSON out. |
 | `db/` | Data access | The *only* code that opens files in `asset/`. Everything else calls its functions (`get_faculty()`, `get_courses()`, etc.). This is the one seam to change if you ever move to SQLite/Postgres. |
 | `models/` | Domain shape | Describes what's *inside* the JSON (`Faculty`, `Course`, `Notice`, `LabInfo`), independent of how a user asks for it. |
@@ -54,7 +59,8 @@ rt/
    - stitches system prompt + live facts + matched data + the visitor's
      question into one prompt string
 4. **`ollama_client.py`** POSTs that prompt to
-   `http://localhost:11434/api/generate` with model `llama3.1:8b`.
+   `http://localhost:11434/api/generate` with the model configured in
+   `.env` (`OLLAMA_MODEL`, currently `hermes3:8b`).
 5. **`main.py`** wraps the reply in `AskResponse` and returns it.
 
 ## 4. The `skill/` upgrade path
@@ -96,13 +102,19 @@ Search today is plain substring matching in
   it auto-starts as a background service)
 - Python via `uv` (or plain `pip` + venv)
 
-### 6.1 Pull the model
+### 6.1 Confirm the model is available
 
 ```powershell
-ollama pull llama3.1:8b
+ollama list
 ```
 
-Confirm it's using the GPU:
+`hermes3:8b` should be in the list. If it isn't:
+
+```powershell
+ollama pull hermes3:8b
+```
+
+Confirm it's using the GPU once it's running:
 
 ```powershell
 ollama ps
@@ -122,7 +134,22 @@ or, without `uv`:
 pip install -r requirements.txt
 ```
 
-### 6.3 Add real data
+`requirements.txt` needs `fastapi`, `uvicorn`, `httpx`, and
+`pydantic-settings` at minimum.
+
+### 6.3 Configure `.env`
+
+```powershell
+copy .env.example .env
+```
+
+Defaults in `.env.example` already point at `hermes3:8b` on
+`http://localhost:11434` and app port `8000` — edit only what you need
+to change. See `.env.example` for the full list of keys and
+`02_Design_Decisions.md` (D1a) for why config lives here instead of in
+code.
+
+### 6.4 Add real data
 
 Replace the placeholder rows in:
 
@@ -134,7 +161,7 @@ Replace the placeholder rows in:
 Each file is a plain JSON array of objects matching the fields in
 `04_Data_Schema.md`. Keep it under ~100 entries per file for latency.
 
-### 6.4 Run the server
+### 6.5 Run the server
 
 From the `rt/` directory (so `app` resolves as a package):
 
@@ -142,10 +169,16 @@ From the `rt/` directory (so `app` resolves as a package):
 uv run uvicorn app.main:app --reload
 ```
 
-Server starts at `http://localhost:8000`. Endpoint details:
-`05_API.md`.
+or, to pick up `APP_HOST`/`APP_PORT` from `.env` without extra flags:
 
-### 6.5 Edit data without downtime
+```powershell
+uv run python -m app.main
+```
+
+Server starts at `http://localhost:8000` (or whatever `APP_PORT` is set
+to). Endpoint details: `05_API.md`.
+
+### 6.6 Edit data without downtime
 
 Edit any file in `app/asset/`, then:
 

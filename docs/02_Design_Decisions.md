@@ -5,9 +5,11 @@ revisited deliberately later, rather than re-litigated from scratch.
 
 ---
 
-## D1. Model: Llama 3.1 8B Instruct, via Ollama
+## D1. Model: Hermes 3 8B, via Ollama
 
-**Decision:** Approved.
+**Decision:** Approved. Supersedes the original Llama 3.1 8B Instruct
+choice below (2026-08-03) — kept as-is, since Hermes 3 is a fine-tune
+of that exact base model, not a different lineage.
 
 **Reasoning:**
 
@@ -15,11 +17,46 @@ revisited deliberately later, rather than re-litigated from scratch.
   instantaneous; large delays make the assistant appear unintelligent.
 - **GPU compatibility** — target hardware is an RTX 4070 (12 GB VRAM,
   laptop variant in the current build). The 8B quantized model occupies
-  roughly half of available VRAM, leaving headroom for the context
-  window, KV cache, OS overhead, and future tool usage.
+  roughly the same VRAM footprint as Llama 3.1 8B (~4.7 GB), leaving
+  headroom for the context window, KV cache, OS overhead, and future
+  tool usage.
 - **Instruction following** — the model follows conversational
   instructions reliably and resists prompt injection better than older
   models of similar size.
+- **Tool-calling** — Hermes 3 is a Nous Research fine-tune of Llama 3.1
+  8B specifically trained for structured output and function/tool
+  calling. That's a better starting point for Phase 6 (tool calling,
+  campus map search, etc.) than the vanilla instruct model, at no cost
+  in size or speed.
+- **Already available locally** — no `ollama pull` needed; it was
+  already on the machine (`ollama list`).
+
+Original reasoning for the Llama 3.1 8B Instruct family (still valid,
+since Hermes 3 inherits the same base):
+
+- Fast response, GPU compatibility, and reliable instruction following
+  were the original selection criteria — see above, all still hold.
+
+---
+
+## D1a. Config: centralized `app/config.py` + `.env`
+
+**Decision:** All environment-specific values (model name, Ollama host,
+API key if any, app port) live in `.env` and are loaded through
+`app/config.py` via `pydantic-settings`. No other module reads
+environment variables directly.
+
+**Reasoning:**
+
+- Swapping models (as just happened with D1) should be a one-line `.env`
+  edit, not a code change in `main.py` or `ollama_client.py`.
+- `pydantic-settings` validates types (e.g. `app_port` is an `int`) and
+  fails fast with a clear error instead of a confusing runtime bug.
+- `ollama_api_key` is currently unused (local Ollama needs no auth) but
+  is there for when Ollama sits behind a proxy, or the backend later
+  talks to a hosted API instead.
+- `.env` is gitignored; `.env.example` is the tracked template so the
+  required keys are documented without leaking any real secrets.
 
 ---
 
