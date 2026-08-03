@@ -4,99 +4,214 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Minal — NIELIT Imphal Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* ---- Tokens ---------------------------------------------------- */
   :root {
-    --bg: #0f1420;
-    --panel: #171d2c;
-    --border: #2a3245;
-    --text: #e8ebf2;
-    --muted: #8891a5;
-    --accent: #4f8cff;
-    --accent-dim: #2d4a8a;
-    --error: #ff6b6b;
-    --bubble-user: #2d3a55;
-    --bubble-assistant: #1c2333;
+    --graphite:        #21242A;   /* panel base */
+    --graphite-raised:  #2A2E36;  /* cards / raised surfaces */
+    --graphite-line:    #383D48;  /* dividers, borders */
+    --bone:             #EDE8DC; /* primary text, warm */
+    --muted:            #8A8F9C; /* labels, secondary text, cool */
+    --amber:            #E8A33D; /* primary indicator / accent */
+    --amber-dim:        #6B4E22;
+    --teal:             #4FA893; /* secondary indicator */
+    --teal-dim:         #2C4B44;
+    --fault:            #D65A4A; /* error only */
+    --fault-dim:        #5C3430;
+
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-body:    'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono:    'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
   }
+
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
-    height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    background: var(--graphite);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(232,163,61,0.05), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(79,168,147,0.05), transparent 40%);
+    color: var(--bone);
+    font-family: var(--font-body);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 20px;
   }
-  .card {
+
+  @media (prefers-reduced-motion: no-preference) {
+    .panel { animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- Panel shell ------------------------------------------------ */
+  .panel {
     width: 100%;
-    max-width: 640px;
-    height: 85vh;
-    max-height: 800px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
+    max-width: 660px;
+    height: 88vh;
+    max-height: 840px;
+    background: var(--graphite-raised);
+    border: 1px solid var(--graphite-line);
+    border-radius: 14px;
+    padding: 22px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
   }
+
+  /* ---- Header ------------------------------------------------------ */
   .header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    padding-bottom: 16px;
     margin-bottom: 14px;
+    border-bottom: 1px solid var(--graphite-line);
   }
-  h1 {
-    margin: 0 0 2px;
-    font-size: 22px;
-    font-weight: 600;
-  }
-  .subtitle {
+  .brand h1 {
     margin: 0;
-    color: var(--muted);
-    font-size: 13px;
+    font-family: var(--font-display);
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
   }
-  .new-chat-btn {
-    background: transparent;
-    border: 1px solid var(--border);
+  .brand .tag {
+    margin: 3px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--muted);
-    font-size: 12px;
-    padding: 7px 12px;
-    border-radius: 8px;
+  }
+
+  .header-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    box-shadow: 0 0 0 rgba(232,163,61,0);
+    flex-shrink: 0;
+  }
+  .led.ready   { background: var(--amber); animation: breathe 2.6s ease-in-out infinite; }
+  .led.thinking{ background: var(--teal);  animation: breathe 0.8s ease-in-out infinite; }
+  .led.fault   { background: var(--fault); }
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 0 2px 0 currentColor; opacity: 0.55; }
+    50%      { box-shadow: 0 0 8px 1px currentColor; opacity: 1; }
+  }
+  .led.ready { color: var(--amber); }
+  .led.thinking { color: var(--teal); }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--graphite-line);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 6px 11px;
+    border-radius: 7px;
     cursor: pointer;
     white-space: nowrap;
     transition: border-color 0.15s, color 0.15s;
   }
-  .new-chat-btn:hover {
-    border-color: var(--accent);
-    color: var(--text);
+  .reset-btn:hover {
+    border-color: var(--amber);
+    color: var(--bone);
   }
-  details.settings {
+
+  /* ---- Category chips (signature element) -------------------------- */
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
     margin-bottom: 14px;
   }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--graphite);
+    border: 1px solid var(--graphite-line);
+    border-radius: 8px;
+    padding: 8px 8px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .chip:hover {
+    border-color: var(--graphite-line);
+    color: var(--bone);
+  }
+  .chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--graphite-line);
+    flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .chip.active {
+    border-color: var(--amber-dim);
+    color: var(--bone);
+    background: rgba(232,163,61,0.07);
+  }
+  .chip.active .dot {
+    background: var(--amber);
+    box-shadow: 0 0 6px 1px rgba(232,163,61,0.7);
+  }
+
+  /* ---- Settings ------------------------------------------------------ */
+  details.settings { margin-bottom: 12px; }
   details.settings summary {
     color: var(--muted);
-    font-size: 12px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     cursor: pointer;
     user-select: none;
   }
-  .api-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
+  .api-row { display: flex; gap: 8px; margin-top: 8px; }
   .api-row input {
     flex: 1;
-    background: #0d1220;
-    border: 1px solid var(--border);
+    background: var(--graphite);
+    border: 1px solid var(--graphite-line);
     color: var(--muted);
     font-size: 12px;
     padding: 8px 10px;
-    border-radius: 8px;
-    font-family: monospace;
+    border-radius: 7px;
+    font-family: var(--font-mono);
   }
+  .api-row input:focus { outline: none; border-color: var(--amber-dim); }
 
+  /* ---- Messages -------------------------------------------------- */
   .messages {
     flex: 1;
     overflow-y: auto;
@@ -106,117 +221,154 @@
     padding: 4px 2px 12px;
   }
   .messages::-webkit-scrollbar { width: 6px; }
-  .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .messages::-webkit-scrollbar-thumb { background: var(--graphite-line); border-radius: 3px; }
+
+  .msg-row { display: flex; flex-direction: column; max-width: 84%; }
+  .msg-row.user { align-self: flex-end; align-items: flex-end; }
+  .msg-row.assistant, .msg-row.error { align-self: flex-start; align-items: flex-start; }
 
   .msg {
-    max-width: 82%;
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 14.5px;
     line-height: 1.5;
     white-space: pre-wrap;
     word-wrap: break-word;
   }
   .msg.user {
-    align-self: flex-end;
-    background: var(--bubble-user);
-    border-bottom-right-radius: 4px;
+    background: var(--amber-dim);
+    color: var(--bone);
+    border-bottom-right-radius: 3px;
   }
   .msg.assistant {
-    align-self: flex-start;
-    background: var(--bubble-assistant);
-    border: 1px solid var(--border);
-    border-bottom-left-radius: 4px;
+    background: var(--graphite);
+    border: 1px solid var(--graphite-line);
+    border-bottom-left-radius: 3px;
   }
   .msg.error {
-    align-self: flex-start;
     background: transparent;
-    border: 1px solid var(--error);
-    color: var(--error);
-    border-bottom-left-radius: 4px;
+    border: 1px solid var(--fault-dim);
+    color: var(--fault);
+    border-bottom-left-radius: 3px;
   }
   .msg.thinking {
-    align-self: flex-start;
-    background: var(--bubble-assistant);
-    border: 1px solid var(--border);
+    background: var(--graphite);
+    border: 1px solid var(--graphite-line);
     color: var(--muted);
-    font-style: italic;
   }
+
+  .source-tag {
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--teal);
+    padding-left: 3px;
+  }
+
   .empty-state {
     margin: auto;
     text-align: center;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 13.5px;
+    line-height: 1.6;
     padding: 20px;
   }
 
+  /* ---- Input row -------------------------------------------------- */
   form {
     display: flex;
     gap: 8px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    border-top: 1px solid var(--graphite-line);
   }
   textarea {
     flex: 1;
     resize: none;
-    background: #0d1220;
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 10px;
-    padding: 12px 14px;
+    background: var(--graphite);
+    border: 1px solid var(--graphite-line);
+    color: var(--bone);
+    border-radius: 9px;
+    padding: 13px 14px;
     font-size: 15px;
-    font-family: inherit;
-    min-height: 46px;
+    font-family: var(--font-body);
+    min-height: 48px;
     max-height: 140px;
     line-height: 1.4;
   }
-  textarea:focus, .api-row input:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
+  textarea:focus { outline: none; border-color: var(--amber-dim); }
+
   button.send {
-    background: var(--accent);
-    color: white;
+    background: var(--amber);
+    color: #241505;
     border: none;
-    border-radius: 10px;
-    padding: 0 22px;
+    border-radius: 9px;
+    padding: 0 24px;
+    font-family: var(--font-display);
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.15s, transform 0.05s;
   }
-  button.send:hover:not(:disabled) { background: #6a9fff; }
+  button.send:hover:not(:disabled) { background: #f0b158; }
+  button.send:active:not(:disabled) { transform: scale(0.98); }
   button.send:disabled {
-    background: var(--accent-dim);
+    background: var(--amber-dim);
+    color: rgba(237,232,220,0.5);
     cursor: not-allowed;
   }
 
-  .dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
+  .dot-loader {
+    display: inline-flex;
+    gap: 4px;
+  }
+  .dot-loader span {
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: var(--muted);
-    margin-right: 4px;
     animation: pulse 1s infinite ease-in-out;
   }
-  .dot:nth-child(2) { animation-delay: 0.15s; }
-  .dot:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.25; }
-    50% { opacity: 1; }
+  .dot-loader span:nth-child(2) { animation-delay: 0.15s; }
+  .dot-loader span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes pulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+
+  @media (max-width: 480px) {
+    .panel { padding: 16px; height: 92vh; }
+    .chips { grid-template-columns: repeat(2, 1fr); }
+    .brand h1 { font-size: 20px; }
   }
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="panel">
   <div class="header">
-    <div>
-      <h1>Minal</h1>
-      <p class="subtitle">NIELIT Imphal campus assistant</p>
+    <div class="brand">
+      <h1>MINAL</h1>
+      <p class="tag">NIELIT Imphal &middot; Campus Assistant</p>
     </div>
-    <button class="new-chat-btn" id="newChatBtn" type="button">New chat</button>
+    <div class="header-controls">
+      <div class="status">
+        <span class="led ready" id="statusLed"></span>
+        <span id="statusLabel">Checking&hellip;</span>
+      </div>
+      <button class="reset-btn" id="newChatBtn" type="button">New chat</button>
+    </div>
+  </div>
+
+  <div class="chips" id="chips">
+    <button class="chip" type="button" data-category="faculty" data-starter="Who teaches ">
+      <span class="dot"></span>Faculty
+    </button>
+    <button class="chip" type="button" data-category="courses" data-starter="Tell me about the course ">
+      <span class="dot"></span>Courses
+    </button>
+    <button class="chip" type="button" data-category="labs" data-starter="What labs cover ">
+      <span class="dot"></span>Labs
+    </button>
+    <button class="chip" type="button" data-category="notices" data-starter="Are there any notices about ">
+      <span class="dot"></span>Notices
+    </button>
   </div>
 
   <details class="settings">
@@ -227,11 +379,11 @@
   </details>
 
   <div class="messages" id="messages">
-    <div class="empty-state" id="emptyState">Ask about faculty, courses, labs, or notices to get started.</div>
+    <div class="empty-state" id="emptyState">Tap a category above, or type your own question about faculty, courses, labs, or notices at NIELIT Imphal.</div>
   </div>
 
   <form id="askForm">
-    <textarea id="query" placeholder="Ask a question…" required rows="1"></textarea>
+    <textarea id="query" placeholder="Ask a question&hellip;" required rows="1"></textarea>
     <button class="send" type="submit" id="submitBtn">Ask</button>
   </form>
 </div>
@@ -243,8 +395,19 @@
   const submitBtn = document.getElementById('submitBtn');
   const messagesEl = document.getElementById('messages');
   const newChatBtn = document.getElementById('newChatBtn');
+  const statusLed = document.getElementById('statusLed');
+  const statusLabel = document.getElementById('statusLabel');
+  const chips = document.querySelectorAll('.chip');
 
   let sessionId = null; // set by the server on first reply, then reused for the conversation
+
+  // Maps a "tool_name:query" source string to a category + a plain-language label.
+  const CATEGORY_MAP = [
+    { match: 'faculty', category: 'faculty', label: 'Faculty directory' },
+    { match: 'course',  category: 'courses', label: 'Course catalog' },
+    { match: 'lab',     category: 'labs',    label: 'Lab directory' },
+    { match: 'notice',  category: 'notices', label: 'Notices board' },
+  ];
 
   function baseUrl() {
     return apiUrlEl.value.trim().replace(/\/+$/, '');
@@ -253,23 +416,82 @@
   function addMessage(role, text) {
     const empty = document.getElementById('emptyState');
     if (empty) empty.remove();
-    const div = document.createElement('div');
-    div.className = `msg ${role}`;
-    div.textContent = text;
-    messagesEl.appendChild(div);
+    const row = document.createElement('div');
+    row.className = `msg-row ${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = `msg ${role}`;
+    bubble.textContent = text;
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
     messagesEl.scrollTop = messagesEl.scrollHeight;
-    return div;
+    return row;
+  }
+
+  function addSourceCaptions(row, sources) {
+    if (!sources || !sources.length) return;
+    const seen = new Set();
+    sources.forEach(src => {
+      const toolName = String(src).split(':')[0].toLowerCase();
+      const match = CATEGORY_MAP.find(c => toolName.includes(c.match));
+      const label = match ? match.label : toolName;
+      if (seen.has(label)) return;
+      seen.add(label);
+      const cap = document.createElement('div');
+      cap.className = 'source-tag';
+      cap.textContent = `via ${label}`;
+      row.appendChild(cap);
+      if (match) flashChip(match.category);
+    });
+  }
+
+  function flashChip(category) {
+    const chip = document.querySelector(`.chip[data-category="${category}"]`);
+    if (!chip) return;
+    chip.classList.add('active');
+    clearTimeout(chip._flashTimer);
+    chip._flashTimer = setTimeout(() => chip.classList.remove('active'), 2200);
   }
 
   function addThinkingBubble() {
     const empty = document.getElementById('emptyState');
     if (empty) empty.remove();
-    const div = document.createElement('div');
-    div.className = 'msg thinking';
-    div.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-    messagesEl.appendChild(div);
+    const row = document.createElement('div');
+    row.className = 'msg-row assistant';
+    const bubble = document.createElement('div');
+    bubble.className = 'msg thinking';
+    bubble.innerHTML = '<span class="dot-loader"><span></span><span></span><span></span></span>';
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
     messagesEl.scrollTop = messagesEl.scrollHeight;
-    return div;
+    return row;
+  }
+
+  function setStatus(state) {
+    // state: 'ready' | 'thinking' | 'offline' | 'fault'
+    statusLed.classList.remove('ready', 'thinking', 'fault');
+    if (state === 'ready') {
+      statusLed.classList.add('ready');
+      statusLabel.textContent = 'Online';
+    } else if (state === 'thinking') {
+      statusLed.classList.add('thinking');
+      statusLabel.textContent = 'Thinking';
+    } else if (state === 'offline') {
+      statusLed.classList.add('fault');
+      statusLabel.textContent = 'Offline';
+    } else {
+      statusLed.classList.add('fault');
+      statusLabel.textContent = 'Error';
+    }
+  }
+
+  async function checkHealth() {
+    try {
+      const res = await fetch(`${baseUrl()}/health`, { method: 'GET' });
+      if (!res.ok) throw new Error('bad status');
+      setStatus('ready');
+    } catch (_) {
+      setStatus('offline');
+    }
   }
 
   function resetConversation() {
@@ -279,7 +501,7 @@
     const empty = document.createElement('div');
     empty.className = 'empty-state';
     empty.id = 'emptyState';
-    empty.textContent = 'Ask about faculty, courses, labs, or notices to get started.';
+    empty.textContent = 'Tap a category above, or type your own question about faculty, courses, labs, or notices at NIELIT Imphal.';
     messagesEl.appendChild(empty);
 
     // best-effort server-side cleanup; ignore failures (e.g. server already gone)
@@ -289,6 +511,17 @@
   }
 
   newChatBtn.addEventListener('click', resetConversation);
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const starter = chip.dataset.starter || '';
+      queryEl.value = starter;
+      queryEl.focus();
+      queryEl.style.height = 'auto';
+      queryEl.style.height = Math.min(queryEl.scrollHeight, 140) + 'px';
+      queryEl.setSelectionRange(queryEl.value.length, queryEl.value.length);
+    });
+  });
 
   // auto-grow textarea, Enter submits, Shift+Enter newline
   queryEl.addEventListener('input', () => {
@@ -313,7 +546,8 @@
     queryEl.style.height = 'auto';
 
     submitBtn.disabled = true;
-    const thinkingBubble = addThinkingBubble();
+    setStatus('thinking');
+    const thinkingRow = addThinkingBubble();
 
     try {
       const res = await fetch(`${baseUrl()}/ask`, {
@@ -334,16 +568,22 @@
       const data = await res.json();
       sessionId = data.session_id || sessionId;
 
-      thinkingBubble.remove();
-      addMessage('assistant', data.answer || '(empty response)');
+      thinkingRow.remove();
+      const row = addMessage('assistant', data.answer || '(empty response)');
+      addSourceCaptions(row, data.sources);
+      setStatus('ready');
     } catch (err) {
-      thinkingBubble.remove();
-      addMessage('error', `Couldn't reach the assistant: ${err.message}`);
+      thinkingRow.remove();
+      addMessage('error', `Minal can't reach the server. Check the connection and try again. (${err.message})`);
+      setStatus('offline');
     } finally {
       submitBtn.disabled = false;
       queryEl.focus();
     }
   });
+
+  checkHealth();
+  setInterval(checkHealth, 25000);
 </script>
 
 </body>
