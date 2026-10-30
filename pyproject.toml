@@ -1,15 +1,62 @@
 [project]
 name = "minal"
 version = "0.1.0"
-description = "Add your description here"
+description = "Institute AI assistant built on open-weight models with retrieval-augmented generation."
 readme = "README.md"
 requires-python = ">=3.12"
+
+# Direct dependencies only. Exact versions are pinned in uv.lock.
 dependencies = [
+    # --- API layer (kept from the existing project) ---
     "fastapi>=0.139.2",
+    "uvicorn>=0.51.0",
     "httpx>=0.28.1",
-    "opencv-contrib-python>=5.0.0.93",
+    "requests>=2.34.2",
     "pydantic-settings>=2.14.2",
     "python-dotenv>=1.2.2",
-    "requests>=2.34.2",
-    "uvicorn>=0.51.0",
+    "opencv-contrib-python>=5.0.0.93",  # not in TECH_STACK.md; remove if unused
+
+    # --- Orchestration: LangChain (TECH_STACK 3.5) ---
+    "langchain>=0.3",
+    "langchain-core>=0.3",
+    "langchain-openai>=0.3",        # talks to LiteLLM's OpenAI-compatible endpoint
+    "langchain-chroma>=0.2",
+    "langchain-huggingface>=0.1",
+
+    # --- Document parsing: Docling (TECH_STACK 3.6) ---
+    "docling>=2.0",
+
+    # --- Embeddings: sentence-transformers / BGE (TECH_STACK 3.7) ---
+    "sentence-transformers>=3.0",
+
+    # --- Vector store: ChromaDB (TECH_STACK 3.8) ---
+    "chromadb>=1.0",
+
+    # --- Observability: Langfuse (TECH_STACK 3.9) ---
+    "langfuse>=3.0",
 ]
+
+[dependency-groups]
+# LLM gateway (TECH_STACK 3.4). Install with: uv sync --group gateway
+gateway = [
+    "litellm[proxy]>=1.50",
+]
+
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.6",
+]
+
+# NOTE: vLLM (TECH_STACK 3.3) is intentionally NOT listed here. It pins its own
+# exact torch/CUDA build, which conflicts with Docling and sentence-transformers
+# in a single lockfile. Run it as a separate service in its own environment;
+# the app only reaches it over HTTP through LiteLLM. See the setup notes.
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src"]

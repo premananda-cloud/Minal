@@ -1,0 +1,13 @@
+name: minal
+channels:
+  - conda-forge
+dependencies:
+  # Runtime pinned to match TECH_STACK.md section 3.1
+  - python=3.12
+
+  # uv is the sole dependency manager (TECH_STACK.md section 3.2).
+  # Everything else (vLLM, LiteLLM, LangChain, Docling, ChromaDB,
+  # sentence-transformers, Langfuse) is declared in pyproject.toml
+  # and pinned in uv.lock, not here.
+  - uv
+  - pip
