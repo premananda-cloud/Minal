@@ -1,7 +1,7 @@
 [
   {
-    "id": "BTECH-CSE",
-    "name": "B.Tech in Computer Science Engineering",
+    "code": "BTECH-CSE",
+    "title": "B.Tech in Computer Science Engineering",
     "type": "UG Degree",
     "duration": "4 years (8 semesters)",
     "department": "Computer Science",
@@ -10,13 +10,18 @@
     "eligibility": "10+2 with PCM, valid JEE Main score",
     "fees": "₹1,50,000 per year",
     "seats_available": 12,
-    "laboratories": ["Programming Lab", "Database Lab", "Network Lab", "Software Engineering Lab"],
+    "laboratories": [
+      "Programming Lab",
+      "Database Lab",
+      "Network Lab",
+      "Software Engineering Lab"
+    ],
     "faculty_coordinator": "Dr. A. Singh",
     "search_text": "B.Tech Computer Science Engineering, 4 years, JEE Main, 60 seats, ₹1.5 lakh/year. Covers programming, databases, networks, software engineering. Career in software development, IT consulting."
   },
   {
-    "id": "BTECH-CSE-AIML",
-    "name": "B.Tech in Computer Science Engineering with AI & ML",
+    "code": "BTECH-CSE-AIML",
+    "title": "B.Tech in Computer Science Engineering with AI & ML",
     "type": "UG Degree",
     "duration": "4 years (8 semesters)",
     "department": "Computer Science",
@@ -25,13 +30,17 @@
     "eligibility": "10+2 with PCM, valid JEE Main score",
     "fees": "₹1,70,000 per year",
     "seats_available": 8,
-    "laboratories": ["AI Lab", "Big Data Lab", "Deep Learning Lab"],
+    "laboratories": [
+      "AI Lab",
+      "Big Data Lab",
+      "Deep Learning Lab"
+    ],
     "faculty_coordinator": "Ms. P. Chanu",
     "search_text": "B.Tech CSE with AI & ML, 4 years, JEE Main, 40 seats, ₹1.7 lakh/year. Focus on AI, ML, deep learning, NLP, big data. Careers as AI engineer, data scientist."
   },
   {
-    "id": "DIP-CSE",
-    "name": "Diploma in Computer Science Engineering",
+    "code": "DIP-CSE",
+    "title": "Diploma in Computer Science Engineering",
     "type": "Diploma",
     "duration": "3 years (6 semesters)",
     "department": "Computer Science",
@@ -40,13 +49,16 @@
     "eligibility": "10+2 pass (Science or Commerce)",
     "fees": "₹80,000 per year",
     "seats_available": 10,
-    "laboratories": ["Basic Computer Lab", "Network Lab"],
+    "laboratories": [
+      "Basic Computer Lab",
+      "Network Lab"
+    ],
     "faculty_coordinator": "Mr. N. Singh",
     "search_text": "Diploma in CSE, 3 years, 30 seats, ₹80k/year. Hands-on programming, networking, database. Careers as junior programmer, technician."
   },
   {
-    "id": "BCA",
-    "name": "Bachelor in Computer Applications (BCA)",
+    "code": "BCA",
+    "title": "Bachelor in Computer Applications (BCA)",
     "type": "UG Degree",
     "duration": "3 years (6 semesters)",
     "department": "Computer Science",
@@ -55,13 +67,16 @@
     "eligibility": "10+2 with Mathematics or Computer Science",
     "fees": "₹1,00,000 per year",
     "seats_available": 15,
-    "laboratories": ["Web Dev Lab", "Database Lab"],
+    "laboratories": [
+      "Web Dev Lab",
+      "Database Lab"
+    ],
     "faculty_coordinator": "Ms. L. Devi",
     "search_text": "BCA, 3 years, 45 seats, ₹1 lakh/year. Programming, web development, database. Careers in IT services, web dev."
   },
   {
-    "id": "MCA",
-    "name": "Master of Computer Applications (MCA)",
+    "code": "MCA",
+    "title": "Master of Computer Applications (MCA)",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Computer Science",
@@ -70,13 +85,16 @@
     "eligibility": "Bachelor's degree in any discipline with Mathematics at 10+2 or graduation level",
     "fees": "₹1,20,000 per year",
     "seats_available": 10,
-    "laboratories": ["Cloud Lab", "Big Data Lab"],
+    "laboratories": [
+      "Cloud Lab",
+      "Big Data Lab"
+    ],
     "faculty_coordinator": "Dr. A. Singh",
     "search_text": "MCA, 2 years, 30 seats, ₹1.2 lakh/year. Advanced algorithms, cloud computing, big data. Careers as senior developer, architect."
   },
   {
-    "id": "MSC-CS-DS",
-    "name": "M.Sc. in Computer Science (Data Science)",
+    "code": "MSC-CS-DS",
+    "title": "M.Sc. in Computer Science (Data Science)",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Computer Science",
@@ -85,13 +103,16 @@
     "eligibility": "Bachelor's degree in CS/IT/Mathematics with minimum 55%",
     "fees": "₹1,00,000 per year",
     "seats_available": 8,
-    "laboratories": ["AI Lab", "Data Analytics Lab"],
+    "laboratories": [
+      "AI Lab",
+      "Data Analytics Lab"
+    ],
     "faculty_coordinator": "Ms. P. Chanu",
     "search_text": "M.Sc CS Data Science, 2 years, 25 seats, ₹1 lakh/year. Stats, ML, data viz, big data. Careers in data analytics, BI."
   },
   {
-    "id": "MTECH-CF",
-    "name": "M.Tech in Cyber Forensics",
+    "code": "MTECH-CF",
+    "title": "M.Tech in Cyber Forensics",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Computer Science",
@@ -100,13 +121,16 @@
     "eligibility": "B.Tech/BE in CSE/IT/ECE or M.Sc with GATE/entrance",
     "fees": "₹1,40,000 per year",
     "seats_available": 5,
-    "laboratories": ["Cyber Forensics Lab", "Security Lab"],
+    "laboratories": [
+      "Cyber Forensics Lab",
+      "Security Lab"
+    ],
     "faculty_coordinator": "Dr. A. Singh",
     "search_text": "M.Tech Cyber Forensics, 2 years, 18 seats, ₹1.4 lakh/year. Digital forensics, malware, encryption. Careers as forensic analyst, security consultant."
   },
   {
-    "id": "MTECH-CFIS",
-    "name": "M.Tech in Cyber Forensics and Information Security",
+    "code": "MTECH-CFIS",
+    "title": "M.Tech in Cyber Forensics and Information Security",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Computer Science",
@@ -115,13 +139,16 @@
     "eligibility": "B.Tech/BE in CSE/IT/ECE or M.Sc with GATE/entrance",
     "fees": "₹1,50,000 per year",
     "seats_available": 6,
-    "laboratories": ["Forensics Lab", "Network Security Lab"],
+    "laboratories": [
+      "Forensics Lab",
+      "Network Security Lab"
+    ],
     "faculty_coordinator": "Dr. A. Singh",
     "search_text": "M.Tech Cyber Forensics & Information Security, 2 years, 18 seats, ₹1.5 lakh/year. Network security, cryptography, forensics. Careers in cybersecurity management."
   },
   {
-    "id": "MTECH-EDT",
-    "name": "M.Tech in Electronics Design and Technology",
+    "code": "MTECH-EDT",
+    "title": "M.Tech in Electronics Design and Technology",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Electronics",
@@ -130,13 +157,16 @@
     "eligibility": "B.Tech/BE in ECE/EEE or related, GATE/entrance",
     "fees": "₹1,30,000 per year",
     "seats_available": 7,
-    "laboratories": ["VLSI Lab", "Analog Lab"],
+    "laboratories": [
+      "VLSI Lab",
+      "Analog Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "M.Tech Electronics Design, 2 years, 20 seats, ₹1.3 lakh/year. Circuit design, VLSI, embedded. Careers in semiconductor, automotive."
   },
   {
-    "id": "MTECH-ES",
-    "name": "M.Tech in Embedded Systems",
+    "code": "MTECH-ES",
+    "title": "M.Tech in Embedded Systems",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Electronics",
@@ -145,13 +175,16 @@
     "eligibility": "B.Tech/BE in ECE/EEE/CSE, GATE/entrance",
     "fees": "₹1,35,000 per year",
     "seats_available": 5,
-    "laboratories": ["Embedded Lab", "IoT Lab"],
+    "laboratories": [
+      "Embedded Lab",
+      "IoT Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "M.Tech Embedded Systems, 2 years, 20 seats, ₹1.35 lakh/year. Microcontrollers, RTOS, FPGA, IoT. Careers in automotive, aerospace."
   },
   {
-    "id": "MTECH-AIML",
-    "name": "M.Tech in Artificial Intelligence and Machine Learning",
+    "code": "MTECH-AIML",
+    "title": "M.Tech in Artificial Intelligence and Machine Learning",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Computer Science",
@@ -160,13 +193,16 @@
     "eligibility": "B.Tech/BE in CSE/IT/ECE or M.Sc with GATE/entrance",
     "fees": "₹1,60,000 per year",
     "seats_available": 5,
-    "laboratories": ["AI Lab", "Deep Learning Lab"],
+    "laboratories": [
+      "AI Lab",
+      "Deep Learning Lab"
+    ],
     "faculty_coordinator": "Ms. P. Chanu",
     "search_text": "M.Tech AI & ML, 2 years, 20 seats, ₹1.6 lakh/year. Deep learning, reinforcement learning, generative models. Careers as AI researcher, data scientist."
   },
   {
-    "id": "MTECH-AE",
-    "name": "M.Tech in Automotive Electronics",
+    "code": "MTECH-AE",
+    "title": "M.Tech in Automotive Electronics",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Electronics",
@@ -175,13 +211,16 @@
     "eligibility": "B.Tech/BE in ECE/EEE/Mechanical with electronics background, GATE/entrance",
     "fees": "₹1,50,000 per year",
     "seats_available": 5,
-    "laboratories": ["Automotive Electronics Lab", "Embedded Lab"],
+    "laboratories": [
+      "Automotive Electronics Lab",
+      "Embedded Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "M.Tech Automotive Electronics, 2 years, 15 seats, ₹1.5 lakh/year. ECUs, CAN/LIN, sensor fusion, autonomous driving. Careers in automotive R&D."
   },
   {
-    "id": "MTECH-DE",
-    "name": "M.Tech in Data Engineering",
+    "code": "MTECH-DE",
+    "title": "M.Tech in Data Engineering",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Computer Science",
@@ -190,13 +229,16 @@
     "eligibility": "B.Tech/BE in CSE/IT or M.Sc with strong programming background, GATE/entrance",
     "fees": "₹1,40,000 per year",
     "seats_available": 6,
-    "laboratories": ["Big Data Lab", "Cloud Lab"],
+    "laboratories": [
+      "Big Data Lab",
+      "Cloud Lab"
+    ],
     "faculty_coordinator": "Ms. L. Devi",
     "search_text": "M.Tech Data Engineering, 2 years, 20 seats, ₹1.4 lakh/year. Hadoop, Spark, Kafka, cloud. Careers as data engineer, big data architect."
   },
   {
-    "id": "MTECH-IOT",
-    "name": "M.Tech in IoT and Sensor Systems",
+    "code": "MTECH-IOT",
+    "title": "M.Tech in IoT and Sensor Systems",
     "type": "PG Degree",
     "duration": "2 years (4 semesters)",
     "department": "Electronics",
@@ -205,13 +247,16 @@
     "eligibility": "B.Tech/BE in ECE/EEE/CSE, GATE/entrance",
     "fees": "₹1,45,000 per year",
     "seats_available": 5,
-    "laboratories": ["IoT Lab", "Sensor Lab"],
+    "laboratories": [
+      "IoT Lab",
+      "Sensor Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "M.Tech IoT & Sensor Systems, 2 years, 18 seats, ₹1.45 lakh/year. IoT architecture, sensor networks, edge computing. Careers as IoT architect, embedded engineer."
   },
   {
-    "id": "PHD-CSE",
-    "name": "Ph.D. in Computer Science Engineering",
+    "code": "PHD-CSE",
+    "title": "Ph.D. in Computer Science Engineering",
     "type": "PhD",
     "duration": "3–5 years (minimum 3 years)",
     "department": "Computer Science",
@@ -220,13 +265,15 @@
     "eligibility": "M.Tech/M.Sc in CS/IT/related with GATE/NET qualification",
     "fees": "₹50,000 per year (full-time with stipend)",
     "seats_available": 3,
-    "laboratories": ["Research Lab (AI/ML or Security)"],
+    "laboratories": [
+      "Research Lab (AI/ML or Security)"
+    ],
     "faculty_coordinator": "Dr. A. Singh",
     "search_text": "Ph.D. CSE, 3-5 years, 10 seats, ₹50k/year with stipend. Research in AI, ML, cybersecurity, data science. Careers in academia, R&D."
   },
   {
-    "id": "PHD-ECE",
-    "name": "Ph.D. in Electronics Engineering",
+    "code": "PHD-ECE",
+    "title": "Ph.D. in Electronics Engineering",
     "type": "PhD",
     "duration": "3–5 years (minimum 3 years)",
     "department": "Electronics",
@@ -235,13 +282,16 @@
     "eligibility": "M.Tech/M.E. in ECE/EEE/related with GATE/NET",
     "fees": "₹50,000 per year (full-time with stipend)",
     "seats_available": 2,
-    "laboratories": ["VLSI Research Lab", "Communication Lab"],
+    "laboratories": [
+      "VLSI Research Lab",
+      "Communication Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "Ph.D. Electronics, 3-5 years, 8 seats, ₹50k/year with stipend. Research in VLSI, signal processing, embedded, IoT. Careers in academia, semiconductor."
   },
   {
-    "id": "PHD-CSA",
-    "name": "Ph.D. in Computer Science and Application",
+    "code": "PHD-CSA",
+    "title": "Ph.D. in Computer Science and Application",
     "type": "PhD",
     "duration": "3–5 years (minimum 3 years)",
     "department": "Computer Science",
@@ -250,13 +300,16 @@
     "eligibility": "M.Tech/MCA/M.Sc in CS/IT with GATE/NET",
     "fees": "₹50,000 per year (full-time with stipend)",
     "seats_available": 2,
-    "laboratories": ["Theory Lab", "Database Research Lab"],
+    "laboratories": [
+      "Theory Lab",
+      "Database Research Lab"
+    ],
     "faculty_coordinator": "Dr. A. Singh",
     "search_text": "Ph.D. CSA, 3-5 years, 8 seats, ₹50k/year with stipend. Research in algorithms, databases, software engineering. Careers in academia, research."
   },
   {
-    "id": "PGD-DS",
-    "name": "Post Graduate Diploma in Data Science",
+    "code": "PGD-DS",
+    "title": "Post Graduate Diploma in Data Science",
     "type": "PG Diploma",
     "duration": "1 year (2 semesters)",
     "department": "Computer Science",
@@ -265,13 +318,16 @@
     "eligibility": "Bachelor's degree in any discipline with Mathematics at 10+2 or graduation",
     "fees": "₹1,20,000 total",
     "seats_available": 5,
-    "laboratories": ["AI Lab", "Big Data Lab"],
+    "laboratories": [
+      "AI Lab",
+      "Big Data Lab"
+    ],
     "faculty_coordinator": "Ms. P. Chanu",
     "search_text": "PG Diploma Data Science, 1 year, 25 seats, ₹1.2 lakh total. Python, ML, deep learning, big data. Careers as data analyst, data scientist."
   },
   {
-    "id": "CERT-PYTHON",
-    "name": "Certificate Course in Data Science and ML using Python",
+    "code": "CERT-PYTHON",
+    "title": "Certificate Course in Data Science and ML using Python",
     "type": "Certificate",
     "duration": "3 months",
     "department": "Computer Science",
@@ -280,13 +336,15 @@
     "eligibility": "Basic programming knowledge, undergraduate degree preferred",
     "fees": "₹20,000",
     "seats_available": 15,
-    "laboratories": ["Computer Lab 1"],
+    "laboratories": [
+      "Computer Lab 1"
+    ],
     "faculty_coordinator": "Ms. P. Chanu",
     "search_text": "Certificate Data Science & ML Python, 3 months, 30 seats, ₹20k. Python, Pandas, ML, Scikit-learn. Ideal for professionals."
   },
   {
-    "id": "CERT-IOT",
-    "name": "Certificate Course in Internet of Things (IoT)",
+    "code": "CERT-IOT",
+    "title": "Certificate Course in Internet of Things (IoT)",
     "type": "Certificate",
     "duration": "3 months",
     "department": "Electronics",
@@ -295,13 +353,16 @@
     "eligibility": "Basic electronics knowledge, 10+2 pass",
     "fees": "₹18,000",
     "seats_available": 10,
-    "laboratories": ["IoT Lab", "Embedded Lab"],
+    "laboratories": [
+      "IoT Lab",
+      "Embedded Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "Certificate IoT, 3 months, 20 seats, ₹18k. Arduino, Raspberry Pi, sensors, cloud. Build IoT projects."
   },
   {
-    "id": "CERT-DBA",
-    "name": "Certificate Course in Database Administration (MySQL)",
+    "code": "CERT-DBA",
+    "title": "Certificate Course in Database Administration (MySQL)",
     "type": "Certificate",
     "duration": "2 months",
     "department": "Computer Science",
@@ -310,13 +371,15 @@
     "eligibility": "Basic SQL knowledge",
     "fees": "₹15,000",
     "seats_available": 12,
-    "laboratories": ["Database Lab"],
+    "laboratories": [
+      "Database Lab"
+    ],
     "faculty_coordinator": "Ms. L. Devi",
     "search_text": "Certificate MySQL DBA, 2 months, 25 seats, ₹15k. Installation, tuning, backup, security. Careers as DBA."
   },
   {
-    "id": "CERT-NET",
-    "name": "Certificate Course in Network Administration (Cisco)",
+    "code": "CERT-NET",
+    "title": "Certificate Course in Network Administration (Cisco)",
     "type": "Certificate",
     "duration": "3 months",
     "department": "Computer Science",
@@ -325,13 +388,15 @@
     "eligibility": "Basic computer knowledge",
     "fees": "₹22,000",
     "seats_available": 8,
-    "laboratories": ["Network Lab"],
+    "laboratories": [
+      "Network Lab"
+    ],
     "faculty_coordinator": "Ms. L. Devi",
     "search_text": "Certificate Network Admin Cisco, 3 months, 20 seats, ₹22k. TCP/IP, routing, switching, VLANs. Careers as network engineer."
   },
   {
-    "id": "CERT-VLSI",
-    "name": "Certificate Course in VLSI Design",
+    "code": "CERT-VLSI",
+    "title": "Certificate Course in VLSI Design",
     "type": "Certificate",
     "duration": "4 months",
     "department": "Electronics",
@@ -340,13 +405,15 @@
     "eligibility": "Basic digital electronics knowledge",
     "fees": "₹25,000",
     "seats_available": 5,
-    "laboratories": ["VLSI Lab"],
+    "laboratories": [
+      "VLSI Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "Certificate VLSI Design, 4 months, 15 seats, ₹25k. Verilog, VHDL, FPGA, synthesis. Careers in semiconductor."
   },
   {
-    "id": "CERT-EMB",
-    "name": "Certificate Course in Embedded C",
+    "code": "CERT-EMB",
+    "title": "Certificate Course in Embedded C",
     "type": "Certificate",
     "duration": "2 months",
     "department": "Electronics",
@@ -355,7 +422,9 @@
     "eligibility": "Knowledge of C programming",
     "fees": "₹15,000",
     "seats_available": 10,
-    "laboratories": ["Embedded Lab"],
+    "laboratories": [
+      "Embedded Lab"
+    ],
     "faculty_coordinator": "Dr. R. Sharma",
     "search_text": "Certificate Embedded C, 2 months, 20 seats, ₹15k. C for embedded, interrupts, UART, SPI. Careers in embedded systems."
   }

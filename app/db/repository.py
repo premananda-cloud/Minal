@@ -40,7 +40,7 @@ def refresh() -> None:
 
 
 def _ensure_loaded() -> None:
-    if _cache["faculty"] is None:
+    if any(_cache[key] is None for key in _cache):
         refresh()
 
 

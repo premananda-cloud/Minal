@@ -223,46 +223,73 @@
   .messages::-webkit-scrollbar { width: 6px; }
   .messages::-webkit-scrollbar-thumb { background: var(--graphite-line); border-radius: 3px; }
 
-  .msg-row { display: flex; flex-direction: column; max-width: 84%; }
-  .msg-row.user { align-self: flex-end; align-items: flex-end; }
-  .msg-row.assistant, .msg-row.error { align-self: flex-start; align-items: flex-start; }
+  /* Each Q&A pair. The question header is sticky within .messages, so as you
+     scroll down through a long answer it detaches and pins to the top; the
+     next exchange's header naturally pushes it off when it arrives. */
+  .exchange { position: relative; }
+  .q-sentinel { height: 0; }
 
-  .msg {
-    padding: 10px 14px;
-    border-radius: 10px;
+  .q-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 4px;
+    background: var(--graphite-raised);
+    border-bottom: 1px solid transparent;
+    cursor: default;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .q-header.is-stuck {
+    border-color: var(--graphite-line);
+    box-shadow: 0 8px 12px -10px rgba(0,0,0,0.6);
+  }
+  .q-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--amber);
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-size: 13.5px;
+    color: var(--bone);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .answer {
+    padding: 6px 4px 20px 30px;
     font-size: 14.5px;
-    line-height: 1.5;
+    line-height: 1.65;
     white-space: pre-wrap;
     word-wrap: break-word;
   }
-  .msg.user {
-    background: var(--amber-dim);
-    color: var(--bone);
-    border-bottom-right-radius: 3px;
+  .answer.error { color: var(--fault); }
+  .answer .chunk {
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
-  .msg.assistant {
-    background: var(--graphite);
-    border: 1px solid var(--graphite-line);
-    border-bottom-left-radius: 3px;
+  .answer .chunk.in { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .answer .chunk { opacity: 1; transition: none; }
   }
-  .msg.error {
-    background: transparent;
-    border: 1px solid var(--fault-dim);
-    color: var(--fault);
-    border-bottom-left-radius: 3px;
-  }
-  .msg.thinking {
-    background: var(--graphite);
-    border: 1px solid var(--graphite-line);
+
+  .thinking-row {
+    padding: 6px 4px 20px 30px;
     color: var(--muted);
   }
 
   .source-tag {
-    margin-top: 4px;
+    display: block;
+    margin-top: 8px;
+    padding-left: 30px;
     font-family: var(--font-mono);
     font-size: 10.5px;
     color: var(--teal);
-    padding-left: 3px;
   }
 
   .empty-state {
@@ -413,21 +440,94 @@
     return apiUrlEl.value.trim().replace(/\/+$/, '');
   }
 
-  function addMessage(role, text) {
-    const empty = document.getElementById('emptyState');
-    if (empty) empty.remove();
-    const row = document.createElement('div');
-    row.className = `msg-row ${role}`;
-    const bubble = document.createElement('div');
-    bubble.className = `msg ${role}`;
-    bubble.textContent = text;
-    row.appendChild(bubble);
-    messagesEl.appendChild(row);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-    return row;
+  // --- Sentence splitting (used for both the pinned-header truncation and
+  // the reveal-on-scroll chunking of the answer) -----------------------
+  function splitSentences(text) {
+    const parts = text.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g);
+    return parts && parts.length ? parts : [text];
   }
 
-  function addSourceCaptions(row, sources) {
+  function firstSentenceTruncated(text, maxLen = 72) {
+    let first = splitSentences(text)[0].trim();
+    if (first.length > maxLen) first = first.slice(0, maxLen - 1).trimEnd() + '\u2026';
+    return first;
+  }
+
+  // --- Observers ---------------------------------------------------------
+  // Reveals each answer sentence the moment it scrolls into view, rather
+  // than on a timer — content still off-screen just sits there, ready.
+  const chunkObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        chunkObserver.unobserve(entry.target);
+      }
+    });
+  }, { root: messagesEl, threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+
+  // Flags a question header as "pinned" the instant its sentinel scrolls
+  // past the top edge, purely for the shadow/border treatment.
+  const stuckObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const header = entry.target.nextElementSibling;
+      if (header) header.classList.toggle('is-stuck', !entry.isIntersecting);
+    });
+  }, { root: messagesEl, threshold: 0 });
+
+  // --- Exchange rendering --------------------------------------------
+  function createExchange(question) {
+    const empty = document.getElementById('emptyState');
+    if (empty) empty.remove();
+
+    const exchange = document.createElement('div');
+    exchange.className = 'exchange';
+
+    const sentinel = document.createElement('div');
+    sentinel.className = 'q-sentinel';
+    exchange.appendChild(sentinel);
+
+    const qHeader = document.createElement('div');
+    qHeader.className = 'q-header';
+    qHeader.title = question;
+    qHeader.innerHTML = '<span class="q-label">Q</span><span class="q-text"></span>';
+    qHeader.querySelector('.q-text').textContent = firstSentenceTruncated(question);
+    exchange.appendChild(qHeader);
+
+    const answer = document.createElement('div');
+    answer.className = 'thinking-row';
+    answer.innerHTML = '<span class="dot-loader"><span></span><span></span><span></span></span>';
+    exchange.appendChild(answer);
+
+    messagesEl.appendChild(exchange);
+    stuckObserver.observe(sentinel);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    return { exchange, answerSlot: answer };
+  }
+
+  function renderAnswer(exchange, answerSlot, text) {
+    const answer = document.createElement('div');
+    answer.className = 'answer';
+    splitSentences(text).forEach(sentence => {
+      const span = document.createElement('span');
+      span.className = 'chunk';
+      span.textContent = sentence;
+      answer.appendChild(span);
+    });
+    answerSlot.replaceWith(answer);
+    answer.querySelectorAll('.chunk').forEach(el => chunkObserver.observe(el));
+    return answer;
+  }
+
+  function renderError(answerSlot, text) {
+    const answer = document.createElement('div');
+    answer.className = 'answer error';
+    answer.textContent = text;
+    answerSlot.replaceWith(answer);
+    return answer;
+  }
+
+  function addSourceCaptions(answerEl, sources) {
     if (!sources || !sources.length) return;
     const seen = new Set();
     sources.forEach(src => {
@@ -439,7 +539,7 @@
       const cap = document.createElement('div');
       cap.className = 'source-tag';
       cap.textContent = `via ${label}`;
-      row.appendChild(cap);
+      answerEl.after(cap);
       if (match) flashChip(match.category);
     });
   }
@@ -450,20 +550,6 @@
     chip.classList.add('active');
     clearTimeout(chip._flashTimer);
     chip._flashTimer = setTimeout(() => chip.classList.remove('active'), 2200);
-  }
-
-  function addThinkingBubble() {
-    const empty = document.getElementById('emptyState');
-    if (empty) empty.remove();
-    const row = document.createElement('div');
-    row.className = 'msg-row assistant';
-    const bubble = document.createElement('div');
-    bubble.className = 'msg thinking';
-    bubble.innerHTML = '<span class="dot-loader"><span></span><span></span><span></span></span>';
-    row.appendChild(bubble);
-    messagesEl.appendChild(row);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-    return row;
   }
 
   function setStatus(state) {
@@ -541,13 +627,12 @@
     const query = queryEl.value.trim();
     if (!query) return;
 
-    addMessage('user', query);
     queryEl.value = '';
     queryEl.style.height = 'auto';
 
     submitBtn.disabled = true;
     setStatus('thinking');
-    const thinkingRow = addThinkingBubble();
+    const { answerSlot } = createExchange(query);
 
     try {
       const res = await fetch(`${baseUrl()}/ask`, {
@@ -568,13 +653,11 @@
       const data = await res.json();
       sessionId = data.session_id || sessionId;
 
-      thinkingRow.remove();
-      const row = addMessage('assistant', data.answer || '(empty response)');
-      addSourceCaptions(row, data.sources);
+      const answerEl = renderAnswer(null, answerSlot, data.answer || '(empty response)');
+      addSourceCaptions(answerEl, data.sources);
       setStatus('ready');
     } catch (err) {
-      thinkingRow.remove();
-      addMessage('error', `Minal can't reach the server. Check the connection and try again. (${err.message})`);
+      renderError(answerSlot, `Minal can't reach the server. Check the connection and try again. (${err.message})`);
       setStatus('offline');
     } finally {
       submitBtn.disabled = false;

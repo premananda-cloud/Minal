@@ -4,7 +4,7 @@
     "title": "Admission for B.Tech 2026-27",
     "date": "2026-07-15",
     "category": "Admissions",
-    "content": "Applications for B.Tech (CSE, ECE, Mech) for the session 2026-27 are now open. Last date: 31 August 2026. Visit the admission portal for details.",
+    "body": "Applications for B.Tech (CSE, ECE, Mech) for the session 2026-27 are now open. Last date: 31 August 2026. Visit the admission portal for details.",
     "link": "/admissions"
   },
   {
@@ -12,7 +12,7 @@
     "title": "Guest Lecture on AI in Healthcare",
     "date": "2026-07-20",
     "category": "Events",
-    "content": "We are hosting Dr. S. Kumar (AI researcher, MIT) for a guest lecture on 'AI Applications in Healthcare' on 28 July 2026 at 2 PM in the Auditorium. All students and faculty are invited.",
+    "body": "We are hosting Dr. S. Kumar (AI researcher, MIT) for a guest lecture on 'AI Applications in Healthcare' on 28 July 2026 at 2 PM in the Auditorium. All students and faculty are invited.",
     "link": "/events/ai-healthcare"
   },
   {
@@ -20,7 +20,7 @@
     "title": "Workshop on Data Science with Python",
     "date": "2026-07-10",
     "category": "Events",
-    "content": "A 3-day workshop on Data Science with Python will be held from 10-12 August 2026. Registration is open for all B.Tech and diploma students. Limited seats (30). Contact Ms. P. Chanu.",
+    "body": "A 3-day workshop on Data Science with Python will be held from 10-12 August 2026. Registration is open for all B.Tech and diploma students. Limited seats (30). Contact Ms. P. Chanu.",
     "link": "/events/datascience-workshop"
   },
   {
@@ -28,7 +28,7 @@
     "title": "Library Timings Extended",
     "date": "2026-07-01",
     "category": "General",
-    "content": "The central library will remain open from 8 AM to 10 PM (including weekends) during the exam period (July-August 2026).",
+    "body": "The central library will remain open from 8 AM to 10 PM (including weekends) during the exam period (July-August 2026).",
     "link": "/library"
   },
   {
@@ -36,7 +36,7 @@
     "title": "Faculty Recruitment 2026",
     "date": "2026-06-25",
     "category": "Career",
-    "content": "NIELIT Imphal invites applications for faculty positions (Assistant Professor/Associate Professor) in CSE, ECE, and Mechanical departments. Last date to apply: 20 August 2026. Visit the careers page.",
+    "body": "NIELIT Imphal invites applications for faculty positions (Assistant Professor/Associate Professor) in CSE, ECE, and Mechanical departments. Last date to apply: 20 August 2026. Visit the careers page.",
     "link": "/careers"
   },
   {
@@ -44,7 +44,7 @@
     "title": "Independence Day Celebration",
     "date": "2026-08-01",
     "category": "Events",
-    "content": "The college will celebrate Independence Day on 15 August 2026 with a flag hoisting ceremony at 8 AM followed by cultural events. All students and staff are requested to attend.",
+    "body": "The college will celebrate Independence Day on 15 August 2026 with a flag hoisting ceremony at 8 AM followed by cultural events. All students and staff are requested to attend.",
     "link": "/events/independence-day"
   },
   {
@@ -52,7 +52,7 @@
     "title": "Campus Wi-Fi Upgrade",
     "date": "2026-07-05",
     "category": "General",
-    "content": "The campus Wi-Fi network will undergo an upgrade from 10-12 July 2026. Intermittent connectivity may occur. We apologize for the inconvenience.",
+    "body": "The campus Wi-Fi network will undergo an upgrade from 10-12 July 2026. Intermittent connectivity may occur. We apologize for the inconvenience.",
     "link": "/it-services"
   },
   {
@@ -60,7 +60,7 @@
     "title": "Placement Drive 2026-27",
     "date": "2026-07-18",
     "category": "Placements",
-    "content": "The annual placement drive for graduating B.Tech students will be held in September 2026. Companies like TCS, Infosys, Wipro, and local startups are expected. Register with the placement cell by 31 August.",
+    "body": "The annual placement drive for graduating B.Tech students will be held in September 2026. Companies like TCS, Infosys, Wipro, and local startups are expected. Register with the placement cell by 31 August.",
     "link": "/placement"
   }
 ]
