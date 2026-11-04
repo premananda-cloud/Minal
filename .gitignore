@@ -8,3 +8,6 @@ venv/
 data/*
 !data/.gitkeep
 .env
+
+### Excluding zip forlder ###
+zip/

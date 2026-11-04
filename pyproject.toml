@@ -15,25 +15,21 @@ dependencies = [
     "pydantic-settings>=2.14.2",
     "python-dotenv>=1.2.2",
     "opencv-contrib-python>=5.0.0.93",  # not in TECH_STACK.md; remove if unused
-
     # --- Orchestration: LangChain (TECH_STACK 3.5) ---
     "langchain>=0.3",
     "langchain-core>=0.3",
     "langchain-openai>=0.3",        # talks to LiteLLM's OpenAI-compatible endpoint
     "langchain-chroma>=0.2",
     "langchain-huggingface>=0.1",
-
     # --- Document parsing: Docling (TECH_STACK 3.6) ---
     "docling>=2.0",
-
     # --- Embeddings: sentence-transformers / BGE (TECH_STACK 3.7) ---
     "sentence-transformers>=3.0",
-
     # --- Vector store: ChromaDB (TECH_STACK 3.8) ---
     "chromadb>=1.0",
-
     # --- Observability: Langfuse (TECH_STACK 3.9) ---
     "langfuse>=3.0",
+    "pytest>=9.2.0",
 ]
 
 [dependency-groups]

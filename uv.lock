@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
@@ -2652,6 +2652,7 @@ dependencies = [
     { name = "langfuse" },
     { name = "opencv-contrib-python" },
     { name = "pydantic-settings" },
+    { name = "pytest" },
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "sentence-transformers" },
@@ -2682,6 +2683,7 @@ requires-dist = [
     { name = "langfuse", specifier = ">=3.0" },
     { name = "opencv-contrib-python", specifier = ">=5.0.0.93" },
     { name = "pydantic-settings", specifier = ">=2.14.2" },
+    { name = "pytest", specifier = ">=9.2.0" },
     { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "requests", specifier = ">=2.34.2" },
     { name = "sentence-transformers", specifier = ">=3.0" },
