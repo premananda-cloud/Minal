@@ -56,3 +56,14 @@ default-groups = ["dev"]
 line-length = 100
 target-version = "py312"
 src = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests/db"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/minal"]
