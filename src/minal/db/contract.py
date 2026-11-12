@@ -35,6 +35,14 @@ class KeyRequest(_M):
     key: str = Field(min_length=1)
 
 
+class RemoveRequest(KeyRequest):
+    """retire / purge. By default blocked while alignments still use the record.
+    cascade: remove those alignments too. force: leave them (they become dangling)."""
+
+    cascade: bool = False
+    force: bool = False
+
+
 class ListRequest(_M):
     kind: Kind
     filters: dict[str, Scalar] = Field(default_factory=dict)
@@ -78,12 +86,14 @@ class RetireResult(_M):
     kind: Kind
     key: str
     version: int
+    cascaded: list[str] = Field(default_factory=list)
 
 
 class PurgeResult(_M):
     kind: Kind
     key: str
     removed: int
+    cascaded: list[str] = Field(default_factory=list)
 
 
 class HistoryResult(_M):

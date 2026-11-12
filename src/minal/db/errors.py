@@ -30,6 +30,10 @@ class ReferenceMissing(DatabaseError):
     code = "reference_missing"
 
 
+class InUse(DatabaseError):
+    code = "in_use"
+
+
 class EmbeddingModelMismatch(DatabaseError):
     code = "embedding_model_mismatch"
 

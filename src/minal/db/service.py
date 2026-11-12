@@ -40,6 +40,7 @@ from .contract import (
 from .errors import (
     BackendError,
     EmbeddingModelMismatch,
+    InUse,
     InvalidRequest,
     NotFound,
     ReferenceMissing,
@@ -301,33 +302,85 @@ class DatabaseWriter(_Core):
         )
         return PutResult(action=action, kind=kind, key=key, version=version)
 
-    def retire(self, req: KeyRequest) -> RetireResult:
-        """Take a record out of active use but keep it as history."""
-        row = self._current(req.kind, req.key, with_embedding=True)
+    # -- removal ----------------------------------------------------------------
+    @staticmethod
+    def _flags(req: KeyRequest) -> tuple[bool, bool]:
+        return bool(getattr(req, "cascade", False)), bool(getattr(req, "force", False))
+
+    def _dependents(self, kind: Kind, key: str, *, current_only: bool) -> list[Row]:
+        """Active alignments that point at this course/faculty record."""
+        field = {Kind.COURSE: "course_code", Kind.FACULTY: "faculty_id"}.get(kind)
+        if field is None:
+            return []
+        where: Where = {"status": "active", field: key}
+        if current_only:
+            n = _date_int(self._clock().date(), MIN_DATE)
+            where["valid_from_int"] = {"$lte": n}
+            where["valid_to_int"] = {"$gte": n}
+        return self._backend.scan(_col(Kind.ALIGNMENT), where)
+
+    def _blockers(self, req: KeyRequest, *, current_only: bool) -> list[str]:
+        """Alignment keys to remove along with the target (cascade); raises InUse
+        when records still use the target and neither cascade nor force was given."""
+        cascade, force = self._flags(req)
+        deps = self._dependents(req.kind, req.key, current_only=current_only)
+        if not deps or (force and not cascade):
+            return []
+        keys = sorted(str(r.metadata["key"]) for r in deps)
+        if cascade:
+            return keys
+        raise InUse(
+            f"{req.kind.value} {req.key!r} is still used by {len(keys)} alignment(s); "
+            "retire those first, or use cascade (remove them too) or force (leave them)",
+            details={"alignments": keys[:20], "count": len(keys)},
+        )
+
+    def _retire_one(self, kind: Kind, key: str) -> int:
+        row = self._current(kind, key, with_embedding=True)
         if row is None:
-            raise NotFound(f"{req.kind.value} {req.key!r} not found")
+            raise NotFound(f"{kind.value} {key!r} not found")
         version = int(row.metadata["version"])
         vec = row.embedding or self._embed([row.document])[0]
         now = self._clock().isoformat()
         self._backend.upsert(
-            _col(req.kind),
+            _col(kind),
             [Row(
-                id=_history_id(req.key, version),
+                id=_history_id(key, version),
                 document=row.document,
                 metadata={**row.metadata, "status": "retired", "archived_at": now},
                 embedding=vec,
             )],
         )
-        self._backend.delete(_col(req.kind), [req.key])
-        return RetireResult(kind=req.kind, key=req.key, version=version)
+        self._backend.delete(_col(kind), [key])
+        return version
+
+    def _purge_one(self, kind: Kind, key: str) -> int:
+        rows = self._versions(kind, key)
+        if not rows:
+            raise NotFound(f"{kind.value} {key!r} not found")
+        return self._backend.delete(_col(kind), [r.id for r in rows])
+
+    def retire(self, req: KeyRequest) -> RetireResult:
+        """Take a record out of active use but keep it as history. Blocked while
+        alignments valid today still use it (past teaching history does not block)."""
+        if self._current(req.kind, req.key) is None:
+            raise NotFound(f"{req.kind.value} {req.key!r} not found")
+        cascaded = self._blockers(req, current_only=True)
+        for alignment_key in cascaded:
+            self._retire_one(Kind.ALIGNMENT, alignment_key)
+        version = self._retire_one(req.kind, req.key)
+        return RetireResult(kind=req.kind, key=req.key, version=version, cascaded=cascaded)
 
     def purge(self, req: KeyRequest) -> PurgeResult:
-        """Hard delete: the record and every historical version."""
-        rows = self._versions(req.kind, req.key)
-        if not rows:
+        """Hard delete: the record and every historical version. Stricter than
+        retire: blocked by ANY active alignment, current or past."""
+        if not self._versions(req.kind, req.key):
             raise NotFound(f"{req.kind.value} {req.key!r} not found")
-        removed = self._backend.delete(_col(req.kind), [r.id for r in rows])
-        return PurgeResult(kind=req.kind, key=req.key, removed=removed)
+        cascaded = self._blockers(req, current_only=False)
+        for alignment_key in cascaded:
+            self._purge_one(Kind.ALIGNMENT, alignment_key)
+        removed = self._purge_one(req.kind, req.key)
+        return PurgeResult(kind=req.kind, key=req.key, removed=removed, cascaded=cascaded)
 
     def reindex(self, req: ReindexRequest = ReindexRequest()) -> ReindexResult:
         """Re-render and re-embed every stored version with the current embedder.

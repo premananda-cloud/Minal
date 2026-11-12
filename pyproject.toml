@@ -67,3 +67,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/minal"]
+
+
+[project.scripts]
+minal-admin = "minal.admin.cli:main"

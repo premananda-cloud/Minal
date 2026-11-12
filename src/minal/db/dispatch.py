@@ -15,7 +15,15 @@ from typing import Any
 
 from pydantic import BaseModel, ValidationError
 
-from .contract import Empty, KeyRequest, ListRequest, PutRequest, ReindexRequest, SearchRequest
+from .contract import (
+    Empty,
+    KeyRequest,
+    ListRequest,
+    PutRequest,
+    ReindexRequest,
+    RemoveRequest,
+    SearchRequest,
+)
 from .errors import DatabaseError, InvalidRequest, UnknownCommand
 
 log = logging.getLogger(__name__)
@@ -35,8 +43,8 @@ COMMANDS: tuple[Command, ...] = (
     Command("history", KeyRequest, "history"),
     Command("stats", Empty, "stats"),
     Command("put", PutRequest, "put"),
-    Command("retire", KeyRequest, "retire"),
-    Command("purge", KeyRequest, "purge"),
+    Command("retire", RemoveRequest, "retire"),
+    Command("purge", RemoveRequest, "purge"),
     Command("reindex", ReindexRequest, "reindex"),
 )
 

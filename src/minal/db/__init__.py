@@ -5,6 +5,7 @@ from .contract import (
     ListRequest,
     PutRequest,
     ReindexRequest,
+    RemoveRequest,
     SearchRequest,
 )
 from .dispatch import Dispatcher
@@ -12,6 +13,7 @@ from .errors import (
     BackendError,
     DatabaseError,
     EmbeddingModelMismatch,
+    InUse,
     InvalidRequest,
     NotFound,
     ReferenceMissing,
@@ -23,6 +25,6 @@ from .service import Database, DatabaseReader, DatabaseWriter
 __all__ = [
     "Alignment", "BackendError", "Course", "Database", "DatabaseError", "DatabaseReader",
     "DatabaseWriter", "Dispatcher", "Empty", "EmbeddingModelMismatch", "Faculty",
-    "InvalidRequest", "Kind", "KeyRequest", "ListRequest", "NotFound", "PutRequest",
+    "InUse", "InvalidRequest", "RemoveRequest", "Kind", "KeyRequest", "ListRequest", "NotFound", "PutRequest",
     "ReferenceMissing", "ReindexRequest", "SearchRequest", "UnknownCommand",
 ]
