@@ -11,3 +11,6 @@ data/*
 
 ### Excluding zip forlder ###
 zip/
+
+# vLLM environment (P4a)
+.venv-vllm/

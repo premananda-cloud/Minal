@@ -36,9 +36,9 @@ A patch is not done until its test gate is met and `STATUS.md` says so.
 | P1 | Database | P0 | L | Done |
 | P2 | Retrieval | P1 | M | Done |
 | P3 | Admin CLI | P1 | M | Done (automated) |
-| **P3.1** | **Close-out: smoke test with real data** | P3 | S | Next |
-| **P3.5** | **Docs and repo reset (README, stack, cleanup)** | P3 | S | Next |
-| P4a | vLLM serving | P0 | M | |
+| **P3.1** | **Close-out: smoke test with real data** | P3 | S | In progress |
+| **P3.5** | **Docs and repo reset (README, stack, cleanup)** | P3 | S | In progress |
+| P4a | vLLM serving | P0 | M | Model decided |
 | P4b | LiteLLM gateway | P4a | S | |
 | P5a | LLM client and fake LLM | P4b | S | |
 | P5b | Prompts and answer chain | P2, P5a | M | |
@@ -80,7 +80,7 @@ P4a/P4b can run alongside P3.1 if time allows. A first end-to-end answer over re
 ## P4a: vLLM serving
 
 **Goal:** a local model running on the machine.
-**Decide first:** which quantized 7-8B instruct model, and its context length for 12 GB VRAM.
+**Decided:** `Qwen/Qwen2.5-7B-Instruct-AWQ`, `awq_marlin`, `max_model_len 4096`, `gpu_memory_utilization 0.80` (see `docs/features/serving.md`).
 **Scope:** separate serving environment, launch script in `scripts/`, config in `configs/`.
 **Test gate:** `curl` to vLLM's `/v1/chat/completions` returns text; VRAM use recorded.
 
@@ -165,7 +165,6 @@ P4a/P4b can run alongside P3.1 if time allows. A first end-to-end answer over re
 | Decision | Needed by |
 | :--- | :--- |
 | Rewrite or archive old `docs/00`-`06` | P3.5 |
-| Which 7-8B model and quantization | P4a |
 | Admin CLI and API sharing embedded Chroma | P6c |
 | Role model and who counts as admin | P8a |
 | Chunking strategy and production embedding model | P9a |

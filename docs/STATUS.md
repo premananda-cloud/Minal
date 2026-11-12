@@ -1,62 +1,39 @@
 # STATUS.md
 
 **Project:** Minal
-**Last updated:** 2026-11-06
-**Current patch:** P3 closed out by a manual smoke test, then P4/P5
-**See also:** `PLAN.md`
+**Last updated:** 2026-11-12
+**Current patch:** P3.1 (smoke test) and P3.5 (docs and repo reset); P4a model decided
 
 ---
-
-## Summary
 
 | # | Patch | State | Evidence |
 | :-- | :--- | :--- | :--- |
 | P0 | Foundation | Done | `uv sync` and `uv run pytest` work |
-| P1 | Database | Done (automated) | Memory and Chroma contract tests pass, incl. persistence across reopen |
-| P2 | Retrieval | Done | `uv run pytest tests/retrieval`: 24 passed |
-| P3 | Admin CLI | Done (automated); manual smoke test pending | Full suite: 145 passed, 0 skipped |
-| P4 | Model serving | Not started | |
-| P5 | LLM layer | Not started | |
-| P6 | Public API | Not started | |
-| P7 | Observability and evaluation | Not started | |
-| P8 | Auth and visibility | Not started | |
-| P9 | Document ingestion | Not started | |
-| P10 | Hardening and docs refresh | Not started | |
+| P1 | Database | Done | Memory and Chroma contract tests pass |
+| P2 | Retrieval | Done | `tests/retrieval`: 24 passed |
+| P3 | Admin CLI | Done (automated) | Full suite: 145 passed |
+| P3.1 | Smoke test, real data | In progress | Not yet run |
+| P3.5 | Docs and repo reset | In progress | README, TECH_STACK, PLAN written; cleanup pending |
+| P4a | vLLM serving | Scripts written, not yet run | `scripts/setup_vllm_env.sh`, `serve_vllm.sh`, `check_vllm.sh`, `configs/vllm.env` |
+| P4b-P10 | See `PLAN.md` | Not started | |
 
-## What changed in P3
-- **db:** retire/purge are now guarded (`InUse` error, `cascade` / `force` flags via `RemoveRequest`); the BGE embedder loads its model lazily so read-only commands are fast.
-- **admin:** `minal-admin` CLI (add, edit, show, list, history, search, stats, reindex, retire, purge, import, export), JSON import with dry run, JSON export, single-owner lock file.
-- **tests:** `tests/db/test_guard.py`, `tests/admin/` (CLI, importer, lock).
-
-## Verified vs not verified
-
-| Item | State |
-| :--- | :--- |
-| Full suite (db, retrieval, admin) | 145 passed, 0 skipped (Chroma-backed tests ran) |
-| Chroma cosine config and collection metadata calls | Verified by the Chroma-backed tests |
-| Real BGE embedder end to end | Not yet run |
-| `minal-admin` against a real on-disk store | Not yet run |
-| Retrieval quality on real questions | Not measured (needs real data, then P7) |
-
-**Next verification step:** manual smoke test: import a small JSON file, list, search, blocked retire, `retire --cascade`, with the real embedder.
-
-## Decisions made
+## Decisions
 - ChromaDB only; one collection per kind; history kept as `<key>#v<N>`.
 - Retrieval gets a read-only handle; admin holds the writer and is local-only.
-- Import format: one JSON file. CSV later if admins need spreadsheets.
-- Retire/purge blocked while alignments use the record (`--cascade`, `--force` to override).
-- Alignment = faculty teaching a course in a term. Program/outcome mapping deferred.
-- Evolve the schema over time; aim for coherent and safe now, not perfect.
+- Import format: one JSON file. CSV later if needed.
+- Retire/purge blocked while alignments use the record (`--cascade`, `--force`).
+- Alignment = faculty teaching a course in a term. Program mapping deferred.
+- **Stack: vLLM + LiteLLM + Chroma + FastAPI. No Ollama.**
+- **Serving model: Qwen2.5-7B-Instruct-AWQ, awq_marlin, max_model_len 4096, gpu_memory_utilization 0.80.**
+- Embedding model stays BGE until P9a benchmark (Qwen3-Embedding-0.6B vs BGE-M3).
 
-## Known issues and cleanup
-- Remove stray folders: `zip/`, `src/minal/vectorstore/`.
-- `src/minal/_legacy/` still a placeholder; decide, then delete.
-- `requirements.txt` redundant; `opencv-contrib-python` unused.
-- Set `asyncio_default_fixture_loop_scope = "function"` in the pytest config to silence the warning (remaining warning is from third-party plugins).
-- Cascade is not atomic; import never deletes; export omits history.
-- `docs/00`-`06` and `TECH_Stack.md` outdated (refreshed in P10).
+## Not yet verified
+- Real BGE embedder end to end; `minal-admin` on a real on-disk store (P3.1).
+- Retrieval quality on real questions (needs data, then P7b).
+- VRAM headroom at 4096 context (P4a).
 
 ## Next actions
-1. Smoke-test the CLI on a real store with the real embedder.
-2. Load a real department's data.
-3. Start P4 (model serving) or P5 (LLM layer).
+1. Run `scripts/p3_5_cleanup.sh`, fix the listed references, confirm 145 tests pass.
+2. Fill in `docs/features/query.md`.
+3. P3.1 smoke test with the real embedder, then load one department.
+4. P4a: run the three scripts on the GPU machine and paste the `check_vllm.sh` output here.
