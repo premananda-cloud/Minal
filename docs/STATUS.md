@@ -2,7 +2,7 @@
 
 **Project:** Minal
 **Last updated:** 2026-11-13
-**Current patch:** P5a (LLM client) built, awaiting your test run; P3.1 and P3.5 still open
+**Current patch:** P5b (answer chain): design doc written, awaiting review; P3.1 and P3.5 still open
 
 ---
 
@@ -16,8 +16,9 @@
 | P3.5 | Docs and repo reset | In progress | README, TECH_STACK, PLAN written; cleanup pending |
 | P4a | vLLM serving | Done | Gate passed 2026-11-13: see evidence below |
 | P4b | LiteLLM gateway | Done | `check_litellm.sh`: P4b GATE: PASS on the real stack, 2026-11-13 |
-| P5a | LLM client and fake LLM | Built; 39 unit tests pass in my environment | Run `uv run pytest tests/llm` on your machine to close |
-| P5b-P10 | See `PLAN.md` | Not started | |
+| P5a | LLM client and fake LLM | Done | Full suite 184 passed, 3 skipped; integration test 3 passed on the real stack, 2026-11-13 |
+| P5b | Prompts and answer chain | Design written (`docs/features/query.md`) | Review the open questions, then build |
+| P5c-P10 | See `PLAN.md` | Not started | |
 
 ## Decisions
 - ChromaDB only; one collection per kind; history kept as `<key>#v<N>`.
@@ -51,7 +52,6 @@
 - Real BGE embedder end to end; `minal-admin` on a real on-disk store (P3.1).
 - Retrieval quality on real questions (needs data, then P7b).
 - VRAM headroom with the embedder on the GPU (run a `minal-admin search` while vLLM is up, then `nvidia-smi`).
-- P5a against the real model: `MINAL_LLM_INTEGRATION=1 uv run pytest tests/llm/test_llm_integration.py` (needs vLLM and the gateway running).
 
 ## Cleanup added for P3.5
 - `pyproject.toml`: remove the `gateway` dependency group (litellm now lives in conda env `minal-litellm`) and `opencv-contrib-python`; `pytest` is listed twice (runtime deps and dev).
@@ -60,5 +60,5 @@
 1. Run `scripts/p3_5_cleanup.sh`, fix the listed references, confirm 145 tests pass.
 2. Fill in `docs/features/query.md`.
 3. P3.1 smoke test with the real embedder, then load one department.
-4. P5a: `uv run pytest tests/llm`, then the integration test with the stack running.
-5. P5b: prompts and answer chain (needs `docs/features/query.md` first).
+4. Review `docs/features/query.md` (open questions in section 6), then build P5b.
+5. P3.1 and P3.5 are still open; the pytest `asyncio_default_fixture_loop_scope` warning is part of P3.5.
