@@ -12,7 +12,7 @@
 | P1 | Database | Done | Memory and Chroma contract tests pass |
 | P2 | Retrieval | Done | `tests/retrieval`: 24 passed |
 | P3 | Admin CLI | Done (automated) | Full suite: 145 passed |
-| P3.1 | Smoke test, real data | In progress | Not yet run |
+| P3.1 | Smoke test, real data | Script written, not yet run | `bash scripts/smoke_admin.sh` (throwaway stores under /tmp, real embedder on CPU) |
 | P3.5 | Docs and repo reset | In progress | README, TECH_STACK, PLAN written; cleanup pending |
 | P4a | vLLM serving | Done | Gate passed 2026-11-13: see evidence below |
 | P4b | LiteLLM gateway | Done | `check_litellm.sh`: P4b GATE: PASS on the real stack, 2026-11-13 |
@@ -30,6 +30,7 @@
 - **Serving model: Qwen2.5-7B-Instruct-AWQ, awq_marlin, max_model_len 4096, gpu_memory_utilization 0.80.**
 - LLM client uses httpx (already a dependency), not the openai SDK or litellm; errors are stable codes (`llm_*`).
 - Answer chain decisions (query.md section 6): English only; uncited answers kept and flagged; small talk bypasses retrieval; `min_score` tuned later in P7b.
+- Default store is `data/chroma` (CLI default); `scripts/ask.py` uses the same default and refuses to create a store.
 - Gateway auth: single master key for now (virtual keys need a database; revisit in P8).
 - Embedding model stays BGE until P9a benchmark (Qwen3-Embedding-0.6B vs BGE-M3).
 
@@ -61,9 +62,8 @@
 - Fill in `AnswerConfig.office_contact` with the institute's real contact when known.
 
 ## Next actions
-1. Run `scripts/p3_5_cleanup.sh`, fix the listed references, confirm 145 tests pass.
-2. Fill in `docs/features/query.md`.
-3. P3.1 smoke test with the real embedder, then load one department.
-4. P3.1: smoke-test `minal-admin` and load one real department.
-5. P5b manual check: `python scripts/ask.py --data-dir <store> --file scripts/questions.txt --log run1.jsonl --show-context` (copy `scripts/questions.example.txt`; stack must be running).
-5. P3.1 and P3.5 are still open; the pytest `asyncio_default_fixture_loop_scope` warning is part of P3.5.
+1. Run `scripts/p3_5_cleanup.sh`, fix the references it lists, confirm `uv run pytest` still passes (P3.5).
+2. P3.1: `bash scripts/smoke_admin.sh`; paste the output. The first run downloads the BGE model.
+3. Delete the empty store my earlier `ask.py` run created: `rm data/chroma.sqlite3` (check `ls data` first; the real store is `data/chroma`).
+4. P5b manual check: `minal-admin import samples/sample_department.json --apply --data-dir data/sample`, then `python scripts/ask.py --data-dir data/sample --file scripts/questions.txt --log run1.jsonl --show-context` (vLLM and gateway running).
+5. Then P5c (follow-up rewriting), or tune with the answers from step 4.
