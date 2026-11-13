@@ -38,8 +38,8 @@ A patch is not done until its test gate is met and `STATUS.md` says so.
 | P3 | Admin CLI | P1 | M | Done (automated) |
 | **P3.1** | **Close-out: smoke test with real data** | P3 | S | In progress |
 | **P3.5** | **Docs and repo reset (README, stack, cleanup)** | P3 | S | In progress |
-| P4a | vLLM serving | P0 | M | Model decided |
-| P4b | LiteLLM gateway | P4a | S | |
+| P4a | vLLM serving | P0 | M | Done |
+| P4b | LiteLLM gateway | P4a | S | In progress |
 | P5a | LLM client and fake LLM | P4b | S | |
 | P5b | Prompts and answer chain | P2, P5a | M | |
 | P5c | Follow-up rewriting | P5b | S | |
@@ -87,8 +87,8 @@ P4a/P4b can run alongside P3.1 if time allows. A first end-to-end answer over re
 ## P4b: LiteLLM gateway
 
 **Goal:** one stable endpoint in front of the model.
-**Scope:** LiteLLM config routing to vLLM, a virtual key for the app, launch script.
-**Test gate:** `curl` to LiteLLM with the key returns an answer; a wrong key is rejected.
+**Scope:** LiteLLM config routing to vLLM, master-key auth, launch and check scripts, in its own conda env. Virtual keys need a database (Postgres) and are deferred to P8.
+**Test gate:** `scripts/check_litellm.sh` passes: no key and wrong key are rejected, the right key returns an answer from vLLM.
 
 ## P5a: LLM client and fake LLM
 

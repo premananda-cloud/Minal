@@ -1,0 +1,10 @@
+# Separate conda env for the gateway, so its pinned web/openai dependencies cannot
+# clash with the app (Docling, LangChain, sentence-transformers).
+name: minal-litellm
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - "litellm[proxy]"

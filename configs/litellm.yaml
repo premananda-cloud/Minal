@@ -1,0 +1,15 @@
+# LiteLLM gateway (P4b). The app calls this, never vLLM directly.
+# The master key is read from the environment (see scripts/serve_litellm.sh).
+model_list:
+  - model_name: minal-llm                 # name the app uses; stays stable if the model changes
+    litellm_params:
+      model: hosted_vllm/minal-llm        # must match --served-model-name in configs/vllm.env
+      api_base: http://127.0.0.1:8000/v1
+      api_key: "none"                     # vLLM itself runs without a key, on localhost only
+
+litellm_settings:
+  drop_params: true                       # ignore request params vLLM does not support
+  request_timeout: 120
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
