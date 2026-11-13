@@ -2,7 +2,7 @@
 
 **Project:** Minal
 **Last updated:** 2026-11-13
-**Current patch:** P5b (answer chain) built, awaiting your test run and real-model check; P3.1 and P3.5 still open
+**Current patch:** P3.1 (load real data) is now the blocker for the P5b manual check; P3.5 still open
 
 ---
 
@@ -17,7 +17,7 @@
 | P4a | vLLM serving | Done | Gate passed 2026-11-13: see evidence below |
 | P4b | LiteLLM gateway | Done | `check_litellm.sh`: P4b GATE: PASS on the real stack, 2026-11-13 |
 | P5a | LLM client and fake LLM | Done | Full suite 184 passed, 3 skipped; integration test 3 passed on the real stack, 2026-11-13 |
-| P5b | Prompts and answer chain | Built; 47 unit tests pass in my environment | Run `uv run pytest tests/services`; then the manual 10-question check |
+| P5b | Prompts and answer chain | Done (automated); manual check pending | Full suite 231 passed, 3 skipped on 2026-11-13. Manual: `scripts/ask.py` with 10 real questions once data is loaded |
 | P5c-P10 | See `PLAN.md` | Not started | |
 
 ## Decisions
@@ -64,5 +64,6 @@
 1. Run `scripts/p3_5_cleanup.sh`, fix the listed references, confirm 145 tests pass.
 2. Fill in `docs/features/query.md`.
 3. P3.1 smoke test with the real embedder, then load one department.
-4. Run `uv run pytest` (expect 184 + 47 = 231 passed, 3 skipped), then the manual answer check (needs the retriever wiring; see below).
+4. P3.1: smoke-test `minal-admin` and load one real department.
+5. P5b manual check: `python scripts/ask.py --data-dir <store> --file scripts/questions.txt --log run1.jsonl --show-context` (copy `scripts/questions.example.txt`; stack must be running).
 5. P3.1 and P3.5 are still open; the pytest `asyncio_default_fixture_loop_scope` warning is part of P3.5.

@@ -1,6 +1,6 @@
 # Feature: query (answer chain), P5b
 
-**Status:** Built with fakes (47 tests); real-model check pending. Design decisions accepted 2026-11-13.
+**Status:** Built; 47 unit tests pass. Manual real-model check pending (`scripts/ask.py`, needs loaded data). Design decisions accepted 2026-11-13.
 
 ## 1. Purpose
 Turn a visitor's question into a short, friendly answer that uses only the institute's
@@ -75,8 +75,7 @@ standalone question.
 ## Known limits
 - The small-talk list is short and English only; anything else goes through retrieval.
 - A model that cites a valid but wrong record is not caught here; that is what P7b measures.
-- `Retriever` protocol assumes `retrieve(RetrievalRequest) -> RetrievalResult`; confirm against
-  `minal.retrieval` when wiring the real retriever.
+- `services.Retriever` is a protocol matching `minal.retrieval.Retriever.retrieve` (confirmed).
 
 ## 7. Build order inside P5b (done)
 1. `llm/prompts.py` and `services/models.py` (Answer, status).
@@ -90,3 +89,10 @@ context and no record that was not retrieved; valid, invalid and missing citatio
 handled as above; `LLMError` propagates; an instruction hidden in a record's text stays inside
 the `<records>` block; today's date appears in the prompt.
 Manual: 10 real questions over the loaded department, answers read by a person.
+
+## 9. Manual check (`scripts/ask.py`)
+Runs the real chain: Chroma store -> read-only Retriever -> LiteLLM -> vLLM. Prints each answer
+with status, citations, tokens and time; `--show-context` lists the retrieved passages and
+`--log run1.jsonl` keeps every answer (useful seed data for the P7b evaluation set). The
+embedder runs on the CPU by default so it does not take the ~1 GB of GPU headroom left beside
+vLLM. Judge each answer by hand: correct, grounded in the shown passages, citations match.
