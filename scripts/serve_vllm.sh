@@ -7,6 +7,7 @@ source configs/vllm.env
 command -v conda >/dev/null || { echo "conda not found on PATH"; exit 1; }
 conda run -n "$CONDA_ENV" python -c "import vllm" 2>/dev/null \
   || { echo "vLLM is not installed in conda env '$CONDA_ENV'. Run: bash scripts/setup_vllm_env.sh"; exit 1; }
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
 ARGS=(--served-model-name "$SERVED_NAME"
       --quantization "$QUANTIZATION"
       --max-model-len "$MAX_MODEL_LEN"

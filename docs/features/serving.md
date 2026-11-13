@@ -39,6 +39,11 @@ Tuning: if 4096 is stable with headroom, try 6144.
   conflicts with Docling/torch. The app env `minal` does not install it. Launch scripts
   are in `scripts/`, settings in `configs/vllm.env`.
 
+- **Known issue (WSL/conda, vLLM 0.33.0):** startup fails in the sampler warm-up with
+  `Could not find nvcc and default cuda_home='/usr/local/cuda' doesn't exist`, because
+  FlashInfer's top-k/top-p sampler compiles with nvcc. Fix: `VLLM_USE_FLASHINFER_SAMPLER=0`
+  (set in `configs/vllm.env`). The "FlashInfer kernels are disabled" warning at startup is harmless.
+
 ## 5. How to run
 ```bash
 bash scripts/setup_vllm_env.sh   # once: creates conda env `minal-vllm`, installs vLLM
