@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "faculty": [
+    {"id": "F001", "name": "Dr Sample Alpha", "department": "CS", "designation": "Professor"},
+    {"id": "F002", "name": "Dr Sample Beta", "department": "CS", "designation": "Associate Professor"},
+    {"id": "F003", "name": "Dr Sample Gamma", "department": "ECE", "designation": "Professor"},
+    {"id": "F004", "name": "Sample Delta", "department": "CS", "designation": "Assistant Professor"}
+  ],
+  "courses": [
+    {"code": "CS101", "title": "Introduction to Programming", "department": "CS", "credits": 4,
+     "description": "Python basics, variables, control flow and problem solving."},
+    {"code": "CS102", "title": "Data Structures", "department": "CS", "credits": 4,
+     "description": "Arrays, linked lists, stacks, queues, trees and graphs.",
+     "prerequisites": ["CS101"]},
+    {"code": "CS201", "title": "Database Systems", "department": "CS", "credits": 3,
+     "description": "Relational model, SQL, normalisation and transactions.",
+     "prerequisites": ["CS102"]},
+    {"code": "CS301", "title": "Machine Learning", "department": "CS", "credits": 3,
+     "description": "Supervised learning, neural networks and model evaluation.",
+     "prerequisites": ["CS201"]},
+    {"code": "EC101", "title": "Basic Electronics", "department": "ECE", "credits": 4,
+     "description": "Diodes, transistors, amplifiers and basic circuit analysis."},
+    {"code": "CS999", "title": "Legacy Systems", "department": "CS", "credits": 2,
+     "description": "Retired sample course, used to test date handling.",
+     "valid_to": "2025-06-30"},
+    {"code": "CS401", "title": "Cloud Computing", "department": "CS", "credits": 3,
+     "description": "Future sample course, used to test date handling.",
+     "valid_from": "2027-01-01"}
+  ],
+  "alignments": [
+    {"course_code": "CS101", "faculty_id": "F002", "term": "2026-Fall"},
+    {"course_code": "CS102", "faculty_id": "F004", "term": "2026-Fall"},
+    {"course_code": "CS201", "faculty_id": "F001", "term": "2026-Fall"},
+    {"course_code": "CS301", "faculty_id": "F001", "term": "2026-Fall"},
+    {"course_code": "EC101", "faculty_id": "F003", "term": "2026-Fall"}
+  ]
+}
