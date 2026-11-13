@@ -1,0 +1,10 @@
+# Separate conda env for model serving. Kept apart from `minal` because vLLM pins
+# its own torch, which conflicts with Docling/sentence-transformers in one env.
+name: minal-vllm
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - vllm

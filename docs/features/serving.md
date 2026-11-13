@@ -35,12 +35,13 @@ Tuning: if 4096 is stable with headroom, try 6144.
   capacity and context length, not a lower usage number.
 - The BGE embedder runs in the app process. If it uses the GPU it shares the VRAM
   left over by vLLM. Measure with both loaded, not vLLM alone.
-- vLLM lives in its own environment (conflicts with Docling/torch). Launch script in
-  `scripts/`, config in `configs/`.
+- vLLM lives in its own conda env, `minal-vllm` (`configs/vllm-env.yml`), because it
+  conflicts with Docling/torch. The app env `minal` does not install it. Launch scripts
+  are in `scripts/`, settings in `configs/vllm.env`.
 
 ## 5. How to run
 ```bash
-bash scripts/setup_vllm_env.sh   # once: creates .venv-vllm, installs vLLM
+bash scripts/setup_vllm_env.sh   # once: creates conda env `minal-vllm`, installs vLLM
 bash scripts/serve_vllm.sh       # terminal 1; settings live in configs/vllm.env
 bash scripts/check_vllm.sh       # terminal 2: curl test + peak VRAM
 ```
