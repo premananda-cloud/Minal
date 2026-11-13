@@ -39,8 +39,8 @@ A patch is not done until its test gate is met and `STATUS.md` says so.
 | **P3.1** | **Close-out: smoke test with real data** | P3 | S | In progress |
 | **P3.5** | **Docs and repo reset (README, stack, cleanup)** | P3 | S | In progress |
 | P4a | vLLM serving | P0 | M | Done |
-| P4b | LiteLLM gateway | P4a | S | In progress |
-| P5a | LLM client and fake LLM | P4b | S | |
+| P4b | LiteLLM gateway | P4a | S | Done |
+| P5a | LLM client and fake LLM | P4b | S | Built, awaiting your test run |
 | P5b | Prompts and answer chain | P2, P5a | M | |
 | P5c | Follow-up rewriting | P5b | S | |
 | P6a | API skeleton (config, health) | P5b | S | |
