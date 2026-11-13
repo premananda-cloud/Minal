@@ -1,6 +1,6 @@
 # Feature: query (answer chain), P5b
 
-**Status:** Draft for review. Build starts once section 6 is answered.
+**Status:** Built with fakes (47 tests); real-model check pending. Design decisions accepted 2026-11-13.
 
 ## 1. Purpose
 Turn a visitor's question into a short, friendly answer that uses only the institute's
@@ -10,6 +10,7 @@ so instead of guessing.
 ## 2. Data flow
 ```
 question
+  -> pure small talk ("hi", "thanks", "who are you")? -> LLM without records, status chat
   -> Retriever.retrieve(RetrievalRequest)         # read-only; exact course codes, then semantic
   -> RetrievalResult { passages[ref], context, empty }
   -> if empty: fixed "I don't know" answer, LLM is NOT called
@@ -23,8 +24,9 @@ standalone question.
 
 ### Answer (new, in `minal.services`)
 - `text`: what to show the visitor, with `[n]` markers kept in.
-- `status`: `answered` | `no_records` (retrieval empty, LLM skipped) | `uncited`
-  (LLM answered but cited nothing valid; see 6.2).
+- `status`: `answered` (cited a real record) | `declined` (model said it lacks the
+  information) | `uncited` (answered but cited nothing valid; kept and logged) |
+  `no_records` (retrieval empty, LLM skipped) | `chat` (small talk, no records).
 - `citations`: the passages actually cited (ref, kind, key), in order of first use.
 - `passages`: everything retrieval returned, for tracing and evaluation.
 - `usage`: token counts from the LLM.
@@ -59,22 +61,24 @@ standalone question.
   the 4096-token window. P5c history must fit inside what is left.
 - Every `Answer` keeps its passages and usage; Langfuse tracing (P7a) records them.
 
-## 6. Open questions (please answer or accept the proposed default)
-1. **`min_score` is unset, so retrieval is almost never empty.** With any data loaded,
-   semantic search returns its top matches even for "what is the weather?". The no-records
-   path will rarely fire until `min_score` is tuned (P7b). Proposed: rely on prompt rule 4
-   for now, and tune the threshold with real questions.
-2. **Answers with no valid citation.** Proposed: return them but mark `status="uncited"` and
-   log them, so P7b can measure how often it happens. Stricter alternative: replace them with
-   the "I don't know" text.
-3. **What to tell a visitor when we lack the answer.** Needs the institute's real contact
-   (office phone/email/website). Proposed: one config value, `office_contact`, inserted into
-   the fixed text and the prompt; until set, say "please contact the institute office".
-4. **Language.** Proposed: English only for v1; answer in English even if asked in another language, and say so.
-5. **Small talk** ("hi", "thanks"). Proposed: the model may reply briefly without citations,
-   and such replies are not marked `uncited` when no records were relevant. Needs a simple rule in 2.
+## 6. Decisions (accepted 2026-11-13)
+1. `min_score` stays unset for now, so the `no_records` path will rarely fire. The model is
+   told to decline when the records do not answer (`declined` status). Tune `min_score` in P7b.
+2. Answers with no valid citation are returned as-is with `status="uncited"`, to be counted in P7b.
+3. `AnswerConfig.office_contact` holds the institute contact. Until it is set the text says
+   "the institute office". **Still needed from you: the real contact details.**
+4. English only for v1.
+5. Small talk is detected before retrieval (whole-message match on greetings, thanks, "who are
+   you", etc.) and answered by the model without records. This replaces the earlier idea of
+   letting the model decide, and keeps greetings from pulling in unrelated records.
 
-## 7. Build order inside P5b (each step has its own tests)
+## Known limits
+- The small-talk list is short and English only; anything else goes through retrieval.
+- A model that cites a valid but wrong record is not caught here; that is what P7b measures.
+- `Retriever` protocol assumes `retrieve(RetrievalRequest) -> RetrievalResult`; confirm against
+  `minal.retrieval` when wiring the real retriever.
+
+## 7. Build order inside P5b (done)
 1. `llm/prompts.py` and `services/models.py` (Answer, status).
 2. `services/prompt.py`: build messages from a `RetrievalResult` (pure function).
 3. `services/citations.py`: parse and validate `[n]` markers (pure function).

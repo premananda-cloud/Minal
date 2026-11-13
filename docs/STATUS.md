@@ -2,7 +2,7 @@
 
 **Project:** Minal
 **Last updated:** 2026-11-13
-**Current patch:** P5b (answer chain): design doc written, awaiting review; P3.1 and P3.5 still open
+**Current patch:** P5b (answer chain) built, awaiting your test run and real-model check; P3.1 and P3.5 still open
 
 ---
 
@@ -17,7 +17,7 @@
 | P4a | vLLM serving | Done | Gate passed 2026-11-13: see evidence below |
 | P4b | LiteLLM gateway | Done | `check_litellm.sh`: P4b GATE: PASS on the real stack, 2026-11-13 |
 | P5a | LLM client and fake LLM | Done | Full suite 184 passed, 3 skipped; integration test 3 passed on the real stack, 2026-11-13 |
-| P5b | Prompts and answer chain | Design written (`docs/features/query.md`) | Review the open questions, then build |
+| P5b | Prompts and answer chain | Built; 47 unit tests pass in my environment | Run `uv run pytest tests/services`; then the manual 10-question check |
 | P5c-P10 | See `PLAN.md` | Not started | |
 
 ## Decisions
@@ -29,6 +29,7 @@
 - **Stack: vLLM + LiteLLM + Chroma + FastAPI. No Ollama.**
 - **Serving model: Qwen2.5-7B-Instruct-AWQ, awq_marlin, max_model_len 4096, gpu_memory_utilization 0.80.**
 - LLM client uses httpx (already a dependency), not the openai SDK or litellm; errors are stable codes (`llm_*`).
+- Answer chain decisions (query.md section 6): English only; uncited answers kept and flagged; small talk bypasses retrieval; `min_score` tuned later in P7b.
 - Gateway auth: single master key for now (virtual keys need a database; revisit in P8).
 - Embedding model stays BGE until P9a benchmark (Qwen3-Embedding-0.6B vs BGE-M3).
 
@@ -56,9 +57,12 @@
 ## Cleanup added for P3.5
 - `pyproject.toml`: remove the `gateway` dependency group (litellm now lives in conda env `minal-litellm`) and `opencv-contrib-python`; `pytest` is listed twice (runtime deps and dev).
 
+## Cleanup added for P3.5 (continued)
+- Fill in `AnswerConfig.office_contact` with the institute's real contact when known.
+
 ## Next actions
 1. Run `scripts/p3_5_cleanup.sh`, fix the listed references, confirm 145 tests pass.
 2. Fill in `docs/features/query.md`.
 3. P3.1 smoke test with the real embedder, then load one department.
-4. Review `docs/features/query.md` (open questions in section 6), then build P5b.
+4. Run `uv run pytest` (expect 184 + 47 = 231 passed, 3 skipped), then the manual answer check (needs the retriever wiring; see below).
 5. P3.1 and P3.5 are still open; the pytest `asyncio_default_fixture_loop_scope` warning is part of P3.5.

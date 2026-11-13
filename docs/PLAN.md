@@ -41,7 +41,7 @@ A patch is not done until its test gate is met and `STATUS.md` says so.
 | P4a | vLLM serving | P0 | M | Done |
 | P4b | LiteLLM gateway | P4a | S | Done |
 | P5a | LLM client and fake LLM | P4b | S | Done |
-| P5b | Prompts and answer chain | P2, P5a | M | Design written |
+| P5b | Prompts and answer chain | P2, P5a | M | Built, awaiting your test run |
 | P5c | Follow-up rewriting | P5b | S | |
 | P6a | API skeleton (config, health) | P5b | S | |
 | P6b | Query endpoint and error mapping | P6a | M | |
