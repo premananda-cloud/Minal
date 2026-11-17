@@ -27,8 +27,9 @@ from pathlib import Path
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("question", nargs="*", help="question to ask (omit for interactive mode)")
-    p.add_argument("--data-dir", default=os.environ.get("MINAL_DATA_DIR"),
-                   help="Chroma store directory (or set MINAL_DATA_DIR)")
+    p.add_argument("--data-dir", default=os.environ.get("MINAL_DATA_DIR", "data/chroma"),
+                   help="Chroma store directory (env MINAL_DATA_DIR; default data/chroma, "
+                        "the same as minal-admin)")
     p.add_argument("--file", help="text file with one question per line (# comments allowed)")
     p.add_argument("--log", help="append each answer to this JSONL file")
     p.add_argument("--show-context", action="store_true", help="print the retrieved passages")
@@ -60,8 +61,10 @@ def build_service(data_dir: str, top_k: int):
     from minal.retrieval import Retriever
     from minal.services import AnswerConfig, AnswerService
 
-    if not Path(data_dir).exists():
-        sys.exit(f"Data directory not found: {data_dir}\nLoad data first with minal-admin import.")
+    # Opening a Chroma path creates a store if none exists, so check first.
+    if not (Path(data_dir) / "chroma.sqlite3").exists():
+        sys.exit(f"No Chroma store at {data_dir} (no chroma.sqlite3 there).\n"
+                 "Load data first with minal-admin import, or pass the right --data-dir.")
     db = open_database(data_dir)
     reader = db.as_reader()
     summary, total = describe_store(reader)
@@ -121,8 +124,6 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if not args.gpu_embedder:
         os.environ["CUDA_VISIBLE_DEVICES"] = ""      # before torch is imported
-    if not args.data_dir:
-        sys.exit("Give --data-dir (or set MINAL_DATA_DIR).")
     service = build_service(args.data_dir, args.top_k)
     log = Path(args.log) if args.log else None
 
