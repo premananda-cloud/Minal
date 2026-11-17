@@ -14,3 +14,10 @@ zip/
 
 # vLLM environment (P4a)
 .venv-vllm/
+
+# vLLM environment (P4a)
+.venv-vllm/
+
+# vLLM environment (P4a)
+.venv-vllm/
+configs/litellm.local.env
